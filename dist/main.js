@@ -5,6 +5,7 @@ import electronSquirrelStartup from 'electron-squirrel-startup';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+const isDev = !app.isPackaged;
 if (electronSquirrelStartup) {
     app.quit();
 }
@@ -21,7 +22,7 @@ const createWindow = () => {
     });
     // Load the app.
     console.log(process.env.VITE_DEV_SERVER_URL);
-    if (true) {
+    if (isDev) {
         mainWindow.loadURL('http://localhost:5173');
         // Open the DevTools.
         mainWindow.webContents.openDevTools();
