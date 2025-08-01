@@ -1,0 +1,39 @@
+{
+  "name": "pulse",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm:watch:main\" \"npm:dev:frontend\" \"npm:dev:electron\"",
+    "dev:frontend": "cd frontend && vite",
+    "predev:electron": "npm run build:main",
+    "dev:electron": "wait-on http://localhost:5173 && electron . --inspect",
+    "watch:main": "tsc --watch",
+    "build": "npm run build:frontend && npm run build:main",
+    "build:frontend": "cd frontend && vite build",
+    "build:main": "tsc",
+    "start": "npm run build && electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "concurrently": "^8.2.2",
+    "electron": "^37.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "electron-squirrel-startup": "^1.0.1",
+    "express": "^5.1.0"
+  }
+}
