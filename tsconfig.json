@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,

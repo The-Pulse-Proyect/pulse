@@ -4,5 +4,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
-  // You can expose other IPC events here
+
+  closeApp: () => ipcRenderer.invoke('close-app'),
+  minimizeApp: () => ipcRenderer.invoke('minimize-app'),
 });

@@ -2,7 +2,6 @@
   "name": "pulse",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "dist/main.js",
   "scripts": {
     "dev": "concurrently \"npm:watch:main\" \"npm:dev:frontend\" \"npm:dev:electron\"",
@@ -26,6 +25,7 @@
     "@types/node": "^24.1.0",
     "concurrently": "^8.2.2",
     "electron": "^37.2.5",
+    "electron-reloader": "^1.2.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "vite": "^7.0.6",

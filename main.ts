@@ -1,10 +1,7 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-import electronSquirrelStartup from 'electron-squirrel-startup';
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const electronSquirrelStartup = require('electron-squirrel-startup');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 
@@ -17,16 +14,26 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    frame: false,
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: true
     },
   });
 
   // Load the app.
   console.log(process.env.VITE_DEV_SERVER_URL)
   if (isDev) {
+    try {
+        require('electron-reloader')(module)
+      } catch (err) {
+        console.warn('🔁 electron-reloader no disponible:', err);
+    }
+
+
     mainWindow.loadURL('http://localhost:5173');
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
@@ -63,4 +70,16 @@ app.on('activate', () => {
 // Example IPC handler
 ipcMain.handle('get-app-version', () => {
   return app.getVersion();
+});
+
+ipcMain.handle('close-app', (event: any) => {
+  console.log("Cerrando aplicación");
+  const ventana = BrowserWindow.getFocusedWindow();
+  if (ventana) ventana.close();
+});
+
+
+ipcMain.handle('minimize-app', () => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) win.minimize();
 });
