@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
-electron_1.contextBridge.exposeInMainWorld('electronAPI', {
+const electronHandler = {
     getAppVersion: () => electron_1.ipcRenderer.invoke('get-app-version'),
     closeApp: () => electron_1.ipcRenderer.invoke('close-app'),
     minimizeApp: () => electron_1.ipcRenderer.invoke('minimize-app'),
     maximizeApp: () => electron_1.ipcRenderer.invoke('maximize-app'),
-});
+    openFile: () => electron_1.ipcRenderer.invoke('dialog:openFile'),
+    processMetadata: (filePaths) => electron_1.ipcRenderer.invoke('music:processMetadata', filePaths),
+};
+electron_1.contextBridge.exposeInMainWorld('electronAPI', electronHandler);
 //# sourceMappingURL=preload.js.map

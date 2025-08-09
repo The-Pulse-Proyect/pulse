@@ -9,6 +9,6 @@
     "sourceMap": true,
     "skipLibCheck": true
   },
-  "include": ["main.ts", "preload.ts"],
+  "include": ["electron/**/*.ts"],
   "exclude": ["node_modules"]
 }

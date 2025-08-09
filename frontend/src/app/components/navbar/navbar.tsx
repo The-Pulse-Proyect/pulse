@@ -2,6 +2,39 @@
 
 import { Minus, X, MoreVertical, Settings, Info, FileText, HelpCircle, Maximize } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { useMusicStore } from '@/store/useMusic';
+
+function CurrentSongTitle() {
+  const { currentSong } = useMusicStore();
+
+  if (!currentSong) {
+    return (
+      <span className="text-sm font-medium text-gray-300">
+        Pulse - Reproductor de Música
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-3">
+      {currentSong.coverUrl && (
+        <img 
+          src={currentSong.coverUrl} 
+          alt={currentSong.title} 
+          className="w-6 h-6 rounded-sm object-cover"
+        />
+      )}
+      <div className="flex flex-col items-center">
+        <span className="text-sm font-medium text-orange-400">
+          {currentSong.title}
+        </span>
+        <span className="text-xs text-gray-400">
+          {currentSong.artist}
+        </span>
+      </div>
+    </div>
+  );
+}
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,7 +64,7 @@ export default function ElectronNavbar() {
   }
 
   return (
-    <div className="flex items-center justify-between h-12 bg-[#2b2b2b] border-b border-gray-800 select-none p-0">
+    <div className="flex items-center justify-between h-12 bg-slate-900/95 border-b border-slate-800 select-none p-0 w-full relative backdrop-blur-sm">
       {/* Menú lateral izquierdo */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -66,11 +99,9 @@ export default function ElectronNavbar() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Título de la aplicación (opcional) */}
-      <div className="flex-1 text-center px-4"> {/* Padding horizontal para el título */}
-        <span className="text-sm font-medium text-gray-300">
-          Mi Aplicación Electron
-        </span>
+      {/* Título de la aplicación / Canción actual */}
+      <div className="flex-1 text-center px-4">
+        <CurrentSongTitle />
       </div>
 
       {/* Controles de ventana - lado derecho */}

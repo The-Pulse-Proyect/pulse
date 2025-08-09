@@ -1,0 +1,48 @@
+@keyframes cavaWave {
+  0% {
+    transform: scaleY(0.8);
+  }
+  50% {
+    transform: scaleY(1.2);
+  }
+  100% {
+    transform: scaleY(0.8);
+  }
+}
+
+.cava-bars {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+
+.cava-bar {
+  width: 3px;
+  background: linear-gradient(to top, rgba(255,255,255,0.8), transparent);
+  transform-origin: bottom;
+  border-radius: 2px;
+}
+
+.cava-bar:nth-child(odd) {
+  animation: cavaWave 1.2s ease-in-out infinite;
+}
+
+.cava-bar:nth-child(even) {
+  animation: cavaWave 1.8s ease-in-out infinite;
+}
+
+.cava-bar:nth-child(3n) {
+  animation: cavaWave 1.5s ease-in-out infinite;
+}
+
+.cava-bar:nth-child(3n+1) {
+  animation: cavaWave 2s ease-in-out infinite;
+}

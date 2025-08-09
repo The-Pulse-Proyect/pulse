@@ -24,7 +24,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
     "concurrently": "^8.2.2",
-    "electron": "^37.2.5",
+    "electron": "^37.2.6",
     "electron-reloader": "^1.2.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
@@ -34,6 +34,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "electron-squirrel-startup": "^1.0.1",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "music-metadata": "^11.7.3"
   }
 }
