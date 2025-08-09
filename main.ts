@@ -24,8 +24,6 @@ const createWindow = () => {
     },
   });
 
-  // Load the app.
-  console.log(process.env.VITE_DEV_SERVER_URL)
   if (isDev) {
     try {
         require('electron-reloader')(module)
@@ -83,3 +81,9 @@ ipcMain.handle('minimize-app', () => {
   const win = BrowserWindow.getFocusedWindow();
   if (win) win.minimize();
 });
+
+ipcMain.handle('maximize-app', () => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) win.maximize();
+});
+

@@ -25,10 +25,10 @@ export function MediaPlayerBar() {
   return (
     <div className="fixed bottom-0 left-0 right-0">
       <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto flex flex-col">
+        <div className=" mx-auto flex flex-col">
           {/* Panel de controles principal */}
           <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-b from-gray-900/95 to-gray-900">
-            <div className="flex items-center gap-8">
+            <div className="flex flex-1 w-full items-center gap-8">
               {/* Controles de reproducción */}
               <PlaybackControls
                 isPlaying={isPlaying}
@@ -42,7 +42,7 @@ export function MediaPlayerBar() {
               />
               
               {/* Barra de progreso */}
-              <div className="w-96">
+              <div className="w-full">
                 <ProgressBar
                   currentTime={currentTime}
                   duration={duration}

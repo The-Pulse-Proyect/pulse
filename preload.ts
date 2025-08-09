@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   closeApp: () => ipcRenderer.invoke('close-app'),
   minimizeApp: () => ipcRenderer.invoke('minimize-app'),
+  maximizeApp: () => ipcRenderer.invoke('maximize-app'),
 });

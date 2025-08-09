@@ -21,7 +21,7 @@ export function ProgressBar({ currentTime, duration, onProgressChange }: Progres
         max={duration}
         step={1}
         onValueChange={onProgressChange}
-        className="flex-1"
+        className="flex-1 w-full"
       />
       <span className="text-xs text-gray-400 font-mono min-w-[35px]">{formatTime(duration)}</span>
     </div>

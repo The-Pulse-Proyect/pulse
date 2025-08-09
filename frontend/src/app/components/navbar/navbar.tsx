@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, X, MoreVertical, Settings, Info, FileText, HelpCircle } from 'lucide-react'
+import { Minus, X, MoreVertical, Settings, Info, FileText, HelpCircle, Maximize } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -11,16 +11,19 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function ElectronNavbar() {
+
   const handleMinimize = () => {
-    // En una app real de Electron, usarías:
     window.electronAPI.minimizeApp()
-    console.log("Minimizar ventana")
   }
 
+  const handleMaximize = () => {
+    window.electronAPI.maximizeApp()
+  }
+
+
+
   const handleClose = async () => {
-    // En una app real de Electron, usarías:
     window.electronAPI.closeApp()
-    console.log("Cerrar ventana")
   }
 
   const handleMenuAction = (action: string) => {
@@ -82,6 +85,17 @@ export default function ElectronNavbar() {
           <Minus className="h-4 w-4" />
           <span className="sr-only">Minimizar</span>
         </Button>
+          <Button
+          variant="ghost"
+          // h-full para ocupar todo el alto, w-12 para un ancho fijo, rounded-none para esquinas cuadradas
+          // p-0 y flex items-center justify-center para centrar el icono
+          className="h-full w-12 rounded-none p-0 flex items-center justify-center hover:bg-gray-700 text-gray-300 hover:text-white"
+          onClick={handleMaximize}
+        >
+          <Maximize className="h-4 w-4" />
+          <span className="sr-only">Maximizar</span>
+        </Button>
+
         <Button
           variant="ghost"
           // h-full para ocupar todo el alto, w-12 para un ancho fijo, rounded-none para esquinas cuadradas

@@ -74,4 +74,9 @@ ipcMain.handle('minimize-app', () => {
     if (win)
         win.minimize();
 });
+ipcMain.handle('maximize-app', () => {
+    const win = BrowserWindow.getFocusedWindow();
+    if (win)
+        win.maximize();
+});
 //# sourceMappingURL=main.js.map

@@ -6,7 +6,18 @@ declare global {
     electronAPI: {
       closeApp: () => void;
       minimizeApp: () => void;
+      maximizeApp: () => void;
       // Puedes agregar más métodos aquí si expones otros
     };
   }
+
+  interface Song {
+    name: string
+    poster: string
+    duration: string
+    author?: string
+    liked?: boolean
+  } 
 }
+
+
