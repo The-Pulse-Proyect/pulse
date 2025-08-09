@@ -7,6 +7,7 @@ declare global {
       closeApp: () => void;
       minimizeApp: () => void;
       maximizeApp: () => void;
+      openFile: () => Promise<string[]>;
       // Puedes agregar más métodos aquí si expones otros
     };
   }

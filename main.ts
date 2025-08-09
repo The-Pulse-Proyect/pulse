@@ -1,9 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const electronSquirrelStartup = require('electron-squirrel-startup');
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+let mainWindow: Electron.BrowserWindow;
 
 const isDev = !app.isPackaged;
 if (electronSquirrelStartup) {
@@ -11,7 +12,7 @@ if (electronSquirrelStartup) {
 }
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     frame: false,
@@ -76,7 +77,6 @@ ipcMain.handle('close-app', (event: any) => {
   if (ventana) ventana.close();
 });
 
-
 ipcMain.handle('minimize-app', () => {
   const win = BrowserWindow.getFocusedWindow();
   if (win) win.minimize();
@@ -87,3 +87,21 @@ ipcMain.handle('maximize-app', () => {
   if (win) win.maximize();
 });
 
+ipcMain.handle('dialog:openFile', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    properties: ['openFile', 'multiSelections'],
+    filters: [
+      {
+        name: 'Musica',
+        extensions: ['mp3', 'wav', 'ogg'],
+      }
+    ],
+  });
+  console.log('Resultado completo del diálogo:', result);
+  const { canceled, filePaths } = result;
+  if (!canceled) {
+    console.log('Backend enviando:', filePaths);
+    return filePaths;
+  }
+  return undefined;
+})
