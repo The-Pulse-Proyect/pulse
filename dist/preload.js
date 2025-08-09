@@ -7,5 +7,6 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     getAppVersion: () => electron_1.ipcRenderer.invoke('get-app-version'),
     closeApp: () => electron_1.ipcRenderer.invoke('close-app'),
     minimizeApp: () => electron_1.ipcRenderer.invoke('minimize-app'),
+    openFile: () => electron_1.ipcRenderer.invoke('dialog:openFile'),
 });
 //# sourceMappingURL=preload.js.map

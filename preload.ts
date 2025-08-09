@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   closeApp: () => ipcRenderer.invoke('close-app'),
   minimizeApp: () => ipcRenderer.invoke('minimize-app'),
+  openFile: () => ipcRenderer.invoke('dialog:openFile'),
 });
