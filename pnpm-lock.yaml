@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@types/play-sound':
-        specifier: ^1.1.2
-        version: 1.1.2
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -20,15 +17,9 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.1.0
-      howler:
-        specifier: ^2.2.4
-        version: 2.2.4
       music-metadata:
         specifier: ^11.7.3
         version: 11.7.3
-      play-sound:
-        specifier: ^1.1.6
-        version: 1.1.6
     devDependencies:
       '@types/cors':
         specifier: ^2.8.19
@@ -39,9 +30,6 @@ importers:
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.3
-      '@types/howler':
-        specifier: ^2.2.12
-        version: 2.2.12
       '@types/node':
         specifier: ^24.1.0
         version: 24.2.0
@@ -413,9 +401,6 @@ packages:
   '@types/express@5.0.3':
     resolution: {integrity: sha512-wGA0NX93b19/dZC1J18tKWVIYWyyF2ZjT9vin/NRu0qzzvfVzWjs04iq2rQ3H65vCTQYlRqs3YHfY7zjdV+9Kw==}
 
-  '@types/howler@2.2.12':
-    resolution: {integrity: sha512-hy769UICzOSdK0Kn1FBk4gN+lswcj1EKRkmiDtMkUGvFfYJzgaDXmVXkSShS2m89ERAatGIPnTUlp2HhfkVo5g==}
-
   '@types/http-cache-semantics@4.0.4':
     resolution: {integrity: sha512-1m0bIFVc7eJWyve9S0RnuRgcQqF/Xd5QsUZAZeQFr1Q3/p9JWoQQEqmVy+DPTNpGXwhgIetAoYF8JSc33q29QA==}
 
@@ -433,9 +418,6 @@ packages:
 
   '@types/node@24.2.0':
     resolution: {integrity: sha512-3xyG3pMCq3oYCNg7/ZP+E1ooTaGB4cG8JWRsqqOYQdbWNY4zbaV0Ennrd7stjiJEFZCaybcIgpTjJWHRfBSIDw==}
-
-  '@types/play-sound@1.1.2':
-    resolution: {integrity: sha512-alq2D5sBtVcq5bzL/yLr5SSQ7B4VTIkX728V3nYfo6TaCtnwFLdHsFgy+N9oCjh67OOZQnj7kkJauWNW0L8bWw==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -747,9 +729,6 @@ packages:
     resolution: {integrity: sha512-/t88Ty3d5JWQbWYgaOGCCYfXRwV1+be02WqYYlL6h0lEiUAMPM8o8qKGO01YIkOHzka2up08wvgYD0mDiI+q3Q==}
     engines: {node: '>= 0.8'}
 
-  find-exec@1.0.3:
-    resolution: {integrity: sha512-gnG38zW90mS8hm5smNcrBnakPEt+cGJoiMkJwCU0IYnEb0H2NQk0NIljhNW+48oniCriFek/PH6QXbwsJo/qug==}
-
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
@@ -844,9 +823,6 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
-
-  howler@2.2.4:
-    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
 
   http-cache-semantics@4.2.0:
     resolution: {integrity: sha512-dTxcvPXqPvXBQpq5dUr6mEMJX4oIEFv6bwom3FDwKRDsuIjjJGANqhBuoAn9c1RQJIdAKav33ED65E2ys+87QQ==}
@@ -1051,9 +1027,6 @@ packages:
   picomatch@4.0.3:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
-
-  play-sound@1.1.6:
-    resolution: {integrity: sha512-09eO4QiXNFXJffJaOW5P6x6F5RLihpLUkXttvUZeWml0fU6x6Zp7AjG9zaeMpgH2ZNvq4GR1ytB22ddYcqJIZA==}
 
   postcss@8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
@@ -1612,8 +1585,6 @@ snapshots:
       '@types/express-serve-static-core': 5.0.7
       '@types/serve-static': 1.15.8
 
-  '@types/howler@2.2.12': {}
-
   '@types/http-cache-semantics@4.0.4': {}
 
   '@types/http-errors@2.0.5': {}
@@ -1631,10 +1602,6 @@ snapshots:
   '@types/node@24.2.0':
     dependencies:
       undici-types: 7.10.0
-
-  '@types/play-sound@1.1.2':
-    dependencies:
-      '@types/node': 24.2.0
 
   '@types/qs@6.14.0': {}
 
@@ -2028,10 +1995,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  find-exec@1.0.3:
-    dependencies:
-      shell-quote: 1.8.3
-
   find-up@5.0.0:
     dependencies:
       locate-path: 6.0.0
@@ -2140,8 +2103,6 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
-
-  howler@2.2.4: {}
 
   http-cache-semantics@4.2.0: {}
 
@@ -2307,10 +2268,6 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.3: {}
-
-  play-sound@1.1.6:
-    dependencies:
-      find-exec: 1.0.3
 
   postcss@8.5.6:
     dependencies:
