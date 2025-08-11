@@ -5,9 +5,23 @@ import { useMusicStore } from './store/useMusic'
 import { Button } from './components/ui/button'
 import { Music } from 'lucide-react'
 import { Sidebar } from './app/components/sidebar/sidebar'
+import { useEffect, useState } from 'react'
 
 function App() {
-  const { addSongsToPlaylist, currentSong } = useMusicStore();
+  const { addSongsToPlaylist, currentSong, isMini } = useMusicStore();
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    window.electronAPI.toggleMiniMode(isMini);
+  }, [isMini]);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      const userConfig = await window.electronAPI.getUserConfig();
+      setSettings(userConfig);
+    };
+    fetchConfig();
+  }, []);
 
   const handleOpenFile = async () => {
     try {
@@ -22,6 +36,15 @@ function App() {
     } catch (error) {
       console.error('Error al cargar archivos:', error);
     }
+  }
+
+  if (isMini) {
+    return (
+      <div className="flex flex-col h-screen text-white bg-slate-900">
+        <ElectronNavbar />
+        <MediaPlayerBar />
+      </div>
+    );
   }
 
   return (
@@ -62,7 +85,7 @@ function App() {
           <div className="flex-1 p-6">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center justify-between mb-8">
-                <h1 className="text-2xl font-bold text-orange-400">Mi Reproductor de Pulso</h1>
+                <h1 className="text-2xl font-bold text-orange-400">{settings.welcomeMessage || 'Mi Reproductor de Pulso'}</h1>
                 <Button
                   onClick={handleOpenFile}
                   className="bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-gray-900 shadow-lg shadow-orange-500/20 hover:shadow-orange-400/30 hover:scale-105 transition-all active:scale-95 font-semibold"

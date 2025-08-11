@@ -8,6 +8,9 @@ const electronHandler = {
   maximizeApp: () => ipcRenderer.invoke('maximize-app'),
   openFile: (): Promise<string[]> => ipcRenderer.invoke('dialog:openFile'),
   processMetadata: (filePaths: string[]): Promise<Song[]> => ipcRenderer.invoke('music:processMetadata', filePaths),
+  toggleMiniMode: (isMini: boolean) => ipcRenderer.invoke('toggle-mini-mode', isMini),
+  getUserConfig: () => ipcRenderer.invoke('config:get'),
+  openConfigFolder: () => ipcRenderer.invoke('config:open-folder'),
 };
 
 contextBridge.exposeInMainWorld('electronAPI', electronHandler);

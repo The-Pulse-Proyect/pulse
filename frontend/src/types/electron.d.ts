@@ -5,6 +5,9 @@ interface ElectronAPI {
   maximizeApp: () => Promise<void>;
   openFile: () => Promise<Song[]>;
   processMetadata: (filePaths: Song[]) => Promise<Song[]>;
+  toggleMiniMode: (isMini: boolean) => Promise<void>;
+  getUserConfig: () => Promise<any>;
+  openConfigFolder: () => Promise<void>;
 }
 
 export interface Song {

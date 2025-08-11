@@ -29,6 +29,8 @@ interface MusicState {
   toggleLike: (songId: string) => void;
   createPlaylist: (name: string, songs?: Song[]) => void;
   toggleSongPlay: (songId: string) => void;
+  isMini: boolean;
+  toggleMiniMode: () => void;
 }
 
 export const useMusicStore = create<MusicState>()(
@@ -39,7 +41,8 @@ export const useMusicStore = create<MusicState>()(
       playlists: [],
       currentPlaylist: [],
       isPlaying: false,
-      
+      isMini: false,
+
       setCurrentSong: (song) => 
         set((state) => ({
           currentSong: { ...song, isPlaying: true },
@@ -113,7 +116,8 @@ export const useMusicStore = create<MusicState>()(
               s.id === songId ? { ...s, isPlaying: true } : { ...s, isPlaying: false }
             )
           };
-        })
+        }),
+      toggleMiniMode: () => set((state) => ({isMini: !state.isMini})),
     }),
     {
       name: 'music-storage'

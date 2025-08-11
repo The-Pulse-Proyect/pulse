@@ -8,6 +8,9 @@ const electronHandler = {
     maximizeApp: () => electron_1.ipcRenderer.invoke('maximize-app'),
     openFile: () => electron_1.ipcRenderer.invoke('dialog:openFile'),
     processMetadata: (filePaths) => electron_1.ipcRenderer.invoke('music:processMetadata', filePaths),
+    toggleMiniMode: (isMini) => electron_1.ipcRenderer.invoke('toggle-mini-mode', isMini),
+    getUserConfig: () => electron_1.ipcRenderer.invoke('config:get'),
+    openConfigFolder: () => electron_1.ipcRenderer.invoke('config:open-folder'),
 };
 electron_1.contextBridge.exposeInMainWorld('electronAPI', electronHandler);
 //# sourceMappingURL=preload.js.map

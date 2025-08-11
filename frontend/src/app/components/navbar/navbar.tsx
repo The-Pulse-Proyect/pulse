@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, X, MoreVertical, Settings, Info, FileText, HelpCircle, Maximize } from 'lucide-react'
+import {Minus, X, MoreVertical, Settings, Info, FileText, HelpCircle, Maximize, Minimize} from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useMusicStore } from '@/store/useMusic';
 
@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function ElectronNavbar() {
+  const { toggleMiniMode } = useMusicStore();
 
   const handleMinimize = () => {
     window.electronAPI.minimizeApp()
@@ -83,9 +84,17 @@ export default function ElectronNavbar() {
             <FileText className="mr-2 h-4 w-4" />
             Nuevo archivo
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => toggleMiniMode()}>
+            <Minimize className="mr-2 h-4 w-4" />
+            <span>Modo Mini</span>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleMenuAction("configuracion")}>
             <Settings className="mr-2 h-4 w-4" />
             Configuración
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => window.electronAPI.openConfigFolder()}>
+            <FileText className="mr-2 h-4 w-4" />
+            <span>Abrir Carpeta de Configuración</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleMenuAction("ayuda")}>
