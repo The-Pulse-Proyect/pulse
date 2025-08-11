@@ -10,11 +10,17 @@ export function CavaVisualizer({ isPlaying = false }: CavaVisualizerProps) {
 
   const updateBarsCount = useCallback(() => {
     const width = window.innerWidth;
-    if (width < 640) { // móvil
-      setNumberOfBars(12);
+    if (width < 500) { // móvil pequeño
+      setNumberOfBars(10);
+    } else if (width < 640) { // móvil
+      setNumberOfBars(14);
+    } else if (width < 768) { // tablet pequeña
+      setNumberOfBars(18);
     } else if (width < 1024) { // tablet
-      setNumberOfBars(16);
-    } else { // desktop
+      setNumberOfBars(22);
+    } else if (width < 1280) { // desktop pequeño
+      setNumberOfBars(26);
+    } else { // desktop grande
       setNumberOfBars(30);
     }
   }, []);
@@ -25,14 +31,25 @@ export function CavaVisualizer({ isPlaying = false }: CavaVisualizerProps) {
     return () => window.removeEventListener('resize', updateBarsCount);
   }, [updateBarsCount]);
 
-  const [spectrumData, setSpectrumData] = useState(() => 
-    Array.from({ length: numberOfBars }, () => Math.random() * 100)
-  );
+  const [spectrumData, setSpectrumData] = useState<number[]>([]);
+
+  // Actualizar spectrumData cuando cambia numberOfBars
+  useEffect(() => {
+    pausedValues.current = Array(numberOfBars).fill(5);
+    setSpectrumData(isPlaying 
+      ? Array.from({ length: numberOfBars }, () => Math.random() * 100)
+      : pausedValues.current
+    );
+  }, [numberOfBars, isPlaying]);
+
+  // Estado de referencia para las barras en pausa
+  const pausedValues = useRef(Array(numberOfBars).fill(5));
 
   // Modo de prueba: siempre activo
   useEffect(() => {
+    // Si no está reproduciendo, establecer los valores de pausa una sola vez
     if (!isPlaying) {
-      setSpectrumData(prev => prev.map(() => 5));
+      setSpectrumData(pausedValues.current);
       return;
     }
 
@@ -76,7 +93,7 @@ export function CavaVisualizer({ isPlaying = false }: CavaVisualizerProps) {
     }, 50);
 
     return () => clearInterval(interval);
-  }, [isPlaying, numberOfBars]);
+  }, [isPlaying, numberOfBars, spectrumData]);
 
   return (
     <div className="cava-container">

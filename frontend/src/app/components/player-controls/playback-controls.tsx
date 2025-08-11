@@ -40,6 +40,7 @@ export function PlaybackControls({
 
       {/* Previous */}
       <Button
+      
         variant="ghost"
         size="icon"
         onClick={onPrevious}

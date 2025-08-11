@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Heart } from 'lucide-react'
 import { PlaybackControls } from "./playback-controls"
@@ -7,17 +7,32 @@ import { CurrentPlaylist } from "../playlist-manager/current-playlist"
 import { useMusicStore } from "@/store/useMusic"
 import "./scrollbar.css"
 import { CavaVisualizer } from "../cava/cava-visualizer"
+import { useSoundStore } from "@/store/useSound"
+import { next, previus } from "@/lib/howler/hwoler"
 
 export function MediaPlayerBar() {
   const [currentTime, setCurrentTime] = useState(0)
-  const [isShuffled, setIsShuffled] = useState(false)
-  const [repeatMode, setRepeatMode] = useState(false)
+
 
   const { currentSong, isPlaying, setIsPlaying, toggleLike } = useMusicStore()
-
+  const { currentSound, isShuffled, setIsShuffled, repeatMode, setRepeatMode } = useSoundStore()
+  
   const handleProgressChange = (value: number[]) => {
     setCurrentTime(value[0])
   }
+
+  // Pausar/reanudar cuando cambia isPlaying
+  useEffect(() => {
+    if (currentSound) {
+      if (isPlaying) {
+        currentSound.play();
+      } else {
+        currentSound.pause();
+      }
+    }
+  }, [isPlaying, currentSound]);
+
+  
 
   return (
     <div className="w-full border-t border-gray-800">
@@ -40,8 +55,8 @@ export function MediaPlayerBar() {
                 repeatMode={repeatMode}
                 onPlayPause={() => setIsPlaying(!isPlaying)}
                 onShuffle={() => setIsShuffled(!isShuffled)}
-                onPrevious={() => {}}
-                onNext={() => {}}
+                onPrevious={previus}
+                onNext={next}
                 onRepeat={() => setRepeatMode(!repeatMode)}
               />
               

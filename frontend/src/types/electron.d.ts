@@ -5,6 +5,7 @@ interface ElectronAPI {
   maximizeApp: () => Promise<void>;
   openFile: () => Promise<Song[]>;
   processMetadata: (filePaths: Song[]) => Promise<Song[]>;
+  getAudioData: (filePath: string) => Promise
 }
 
 export interface Song {

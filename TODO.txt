@@ -1,0 +1,7 @@
+Quitar lo de añadir canciones en playlist de favoritos
+mejorar dialogs
+arreglar boton de eliminar
+diemnsionar imagen de fondo
+anadir soporte a media services nativos de windows y linux
+funcion de añadir canciones en dependencia de la playlist
+quitar boton de prueba de añadir musica

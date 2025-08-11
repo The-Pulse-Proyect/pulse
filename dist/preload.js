@@ -8,6 +8,8 @@ const electronHandler = {
     maximizeApp: () => electron_1.ipcRenderer.invoke('maximize-app'),
     openFile: () => electron_1.ipcRenderer.invoke('dialog:openFile'),
     processMetadata: (filePaths) => electron_1.ipcRenderer.invoke('music:processMetadata', filePaths),
+    // Musica
+    getAudioData: (filePath) => electron_1.ipcRenderer.invoke('get-audio-data', filePath)
 };
 electron_1.contextBridge.exposeInMainWorld('electronAPI', electronHandler);
 //# sourceMappingURL=preload.js.map

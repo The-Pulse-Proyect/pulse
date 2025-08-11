@@ -1,5 +1,8 @@
+
+import { playSound } from '@/lib/howler/hwoler';
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useSoundStore } from './useSound';
 
 
 export interface Song {
@@ -15,10 +18,17 @@ export interface Song {
   isLiked?: boolean;
 }
 
+interface PlaylistInfo {
+  id: string;
+  name: string;
+  songs: Song[];
+  isSystem?: boolean;
+}
+
 interface MusicState {
   currentSong?: Song;
   selectedSong?: Song;
-  playlists: { id: string; name: string; songs: Song[] }[];
+  playlists: PlaylistInfo[];
   currentPlaylist: Song[];
   isPlaying: boolean;
   setCurrentSong: (song: Song) => void;
@@ -29,42 +39,93 @@ interface MusicState {
   toggleLike: (songId: string) => void;
   createPlaylist: (name: string, songs?: Song[]) => void;
   toggleSongPlay: (songId: string) => void;
+    loadPlaylist: (playlistId: string) => void;
+    removePlaylist: (playlistId: string) => void;
 }
+
+// Constantes para playlists especiales
+export const FAVORITES_PLAYLIST_ID = 'favorites';
+export const CURRENT_SESSION_PLAYLIST_ID = 'current-session';
 
 export const useMusicStore = create<MusicState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentSong: undefined,
       selectedSong: undefined,
-      playlists: [],
+      playlists: [
+        {
+          id: FAVORITES_PLAYLIST_ID,
+          name: '❤️ Favoritos',
+          songs: [],
+          isSystem: true
+        },
+        {
+          id: CURRENT_SESSION_PLAYLIST_ID,
+          name: '🎵 Reproducción Actual',
+          songs: [],
+          isSystem: true
+        }
+      ],
       currentPlaylist: [],
       isPlaying: false,
-      
+        removePlaylist: (playlistId) =>
+          set((state) => ({
+            playlists: state.playlists.filter(p => p.id !== playlistId),
+            currentPlaylist: state.currentPlaylist.length && state.playlists.find(p => p.id === playlistId)?.songs === state.currentPlaylist ? [] : state.currentPlaylist,
+            currentSong: state.currentPlaylist.length && state.playlists.find(p => p.id === playlistId)?.songs === state.currentPlaylist ? undefined : state.currentSong,
+            selectedSong: state.currentPlaylist.length && state.playlists.find(p => p.id === playlistId)?.songs === state.currentPlaylist ? undefined : state.selectedSong
+          })),
+
       setCurrentSong: (song) => 
+      {
         set((state) => ({
           currentSong: { ...song, isPlaying: true },
           currentPlaylist: state.currentPlaylist.map(s => 
             s.id === song.id ? { ...s, isPlaying: true } : { ...s, isPlaying: false }
           )
-        })),
+        }))
+      },
 
-      setIsPlaying: (isPlaying) => 
+      setIsPlaying: (isPlaying) => {
+        const { currentSound } = useSoundStore.getState();
+        // Si hay un sonido actual, lo detenemos y liberamos recursos
+        const { currentSong } = get();
+        // Si isPlaying es true, reproducimos el sonido
+        if (isPlaying && currentSong && !currentSound) playSound(currentSong.filePath);
         set((state) => ({
           isPlaying,
           currentSong: state.currentSong 
             ? { ...state.currentSong, isPlaying }
             : undefined
-        })),
+        }))
+      },
 
       addSongsToPlaylist: (songs) =>
         set((state) => {
           const newSongs = songs.map((song) => ({
             ...song,
             id: crypto.randomUUID(),
-            isPlaying: false
+            isPlaying: false,
+            isLiked: false
           }));
+
+          // Actualizar la playlist de sesión actual
+          const updatedPlaylists = state.playlists.map(playlist => 
+            playlist.id === CURRENT_SESSION_PLAYLIST_ID
+              ? { ...playlist, songs: [...playlist.songs, ...newSongs] }
+              : playlist
+          );
+
+          // Si no hay playlist actual, usar la de sesión actual
+          const updatedCurrentPlaylist = state.currentPlaylist.length === 0
+            ? newSongs
+            : [...state.currentPlaylist, ...newSongs];
+
           return {
-            currentPlaylist: [...state.currentPlaylist, ...newSongs]
+            playlists: updatedPlaylists,
+            currentPlaylist: updatedCurrentPlaylist,
+            // Si no hay canción actual, establecer la primera de las nuevas
+            currentSong: state.currentSong || newSongs[0]
           };
         }),
 
@@ -84,28 +145,119 @@ export const useMusicStore = create<MusicState>()(
         set({ selectedSong: song }),
 
       removeSongFromPlaylist: (songId) =>
-        set((state) => ({
-          currentPlaylist: state.currentPlaylist.filter(s => s.id !== songId),
-          // Si la canción eliminada es la actual, la limpiamos
-          currentSong: state.currentSong?.id === songId ? undefined : state.currentSong,
-          isPlaying: state.currentSong?.id === songId ? false : state.isPlaying
-        })),
+        set((state) => {
+          const updatedCurrentPlaylist = state.currentPlaylist.filter(s => s.id !== songId);
+          
+          // Actualizar todas las playlists, incluyendo las del sistema
+          const updatedPlaylists = state.playlists.map(playlist => {
+            // Para la playlist de favoritos, mantener la lógica especial
+            if (playlist.id === FAVORITES_PLAYLIST_ID) {
+              return {
+                ...playlist,
+                songs: playlist.songs.filter(s => s.id !== songId)
+              };
+            }
+            // Para la playlist de sesión actual, reflejar el estado actual
+            if (playlist.id === CURRENT_SESSION_PLAYLIST_ID) {
+              return {
+                ...playlist,
+                songs: playlist.songs.filter(s => s.id !== songId)
+              };
+            }
+            // Para el resto de playlists
+            return {
+              ...playlist,
+              songs: playlist.songs.filter(s => s.id !== songId)
+            };
+          });
+
+          // Si la canción eliminada era la actual
+          if (state.currentSong?.id === songId) {
+            // Intentar seleccionar la siguiente canción, o la anterior si era la última
+            const currentIndex = state.currentPlaylist.findIndex(s => s.id === songId);
+            const nextSong = updatedCurrentPlaylist[currentIndex] || updatedCurrentPlaylist[currentIndex - 1];
+            
+            // Si hay un sonido actual reproduciéndose, detenerlo
+            const { currentSound } = useSoundStore.getState();
+            if (currentSound) {
+              currentSound.stop();
+              currentSound.unload();
+            }
+
+            return {
+              currentPlaylist: updatedCurrentPlaylist,
+              playlists: updatedPlaylists,
+              currentSong: nextSong,
+              selectedSong: nextSong,
+              isPlaying: false
+            };
+          }
+
+          return {
+            currentPlaylist: updatedCurrentPlaylist,
+            playlists: updatedPlaylists,
+            currentSong: state.currentSong,
+            selectedSong: state.selectedSong,
+            isPlaying: state.isPlaying
+          };
+        }),
 
       toggleLike: (songId) =>
-        set((state) => ({
-          currentPlaylist: state.currentPlaylist.map(s => 
-            s.id === songId ? { ...s, isLiked: !s.isLiked } : s
-          ),
-          currentSong: state.currentSong?.id === songId 
-            ? { ...state.currentSong, isLiked: !state.currentSong.isLiked }
-            : state.currentSong
-        })),
+        set((state) => {
+          // Encontrar la canción en la playlist actual o en cualquier playlist
+          const song = state.currentPlaylist.find(s => s.id === songId) || 
+                      state.playlists.flatMap(p => p.songs).find(s => s.id === songId);
+          
+          if (!song) return state;
+
+          const newLikeState = !song.isLiked;
+          
+          // Actualizar el estado de "me gusta" en todas las playlists
+          const updatedPlaylists = state.playlists.map(playlist => {
+            if (playlist.id === FAVORITES_PLAYLIST_ID) {
+              // Para la playlist de favoritos
+              if (newLikeState) {
+                // Añadir a favoritos si no existe
+                return {
+                  ...playlist,
+                  songs: playlist.songs.some(s => s.id === songId)
+                    ? playlist.songs.map(s => s.id === songId ? { ...s, isLiked: true } : s)
+                    : [...playlist.songs, { ...song, isLiked: true }]
+                };
+              } else {
+                // Quitar de favoritos
+                return {
+                  ...playlist,
+                  songs: playlist.songs.filter(s => s.id !== songId)
+                };
+              }
+            } else {
+              // Para otras playlists, solo actualizar el estado
+              return {
+                ...playlist,
+                songs: playlist.songs.map(s => 
+                  s.id === songId ? { ...s, isLiked: newLikeState } : s
+                )
+              };
+            }
+          });
+
+          return {
+            playlists: updatedPlaylists,
+            currentPlaylist: state.currentPlaylist.map(s => 
+              s.id === songId ? { ...s, isLiked: newLikeState } : s
+            ),
+            currentSong: state.currentSong?.id === songId 
+              ? { ...state.currentSong, isLiked: newLikeState }
+              : state.currentSong
+          };
+        }),
 
       toggleSongPlay: (songId) =>
         set((state) => {
           const song = state.currentPlaylist.find(s => s.id === songId);
           if (!song) return state;
-
+          playSound(song.filePath)
           return {
             currentSong: song,
             isPlaying: true,
@@ -113,10 +265,52 @@ export const useMusicStore = create<MusicState>()(
               s.id === songId ? { ...s, isPlaying: true } : { ...s, isPlaying: false }
             )
           };
+        }),
+
+      loadPlaylist: (playlistId) =>
+        set((state) => {
+          const playlist = state.playlists.find(p => p.id === playlistId);
+          if (!playlist) return state;
+
+          // Detener y liberar el sonido actual
+          const { currentSound, setCurrentSound } = useSoundStore.getState();
+          if (currentSound) {
+            currentSound.stop();
+            currentSound.unload();
+            setCurrentSound(null);
+          }
+
+          // Preservar el estado de "me gusta" al cargar las canciones
+          const songsWithLikeState = playlist.songs.map(song => {
+            const existingVersion = state.playlists
+              .find(p => p.id === FAVORITES_PLAYLIST_ID)?.songs
+              .find(s => s.id === song.id);
+            return {
+              ...song,
+              isLiked: existingVersion?.isLiked || false,
+              isPlaying: false
+            };
+          });
+
+          const firstSong = songsWithLikeState[0];
+
+          return {
+            currentPlaylist: songsWithLikeState,
+            currentSong: firstSong,
+            selectedSong: firstSong,
+            isPlaying: false // Asegura que no se reproduce automáticamente
+          };
         })
     }),
     {
-      name: 'music-storage'
+      name: 'music-storage',
+      partialize: (state) => ({
+        currentSong: state.currentSong,
+        selectedSong: state.selectedSong,
+        playlists: state.playlists,
+        currentPlaylist: state.currentPlaylist,
+        // isPlaying NO se almacena
+      }),
     }
   )
 ) 

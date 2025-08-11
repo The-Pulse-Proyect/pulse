@@ -1,7 +1,11 @@
 import { ipcMain, dialog, BrowserWindow } from 'electron';
 import { parseFile } from 'music-metadata';
 import path from 'path';
-import { Song } from '../types/music';
+import fs from "fs"
+
+
+export const toFileUrl = (localPath: string) =>
+  `file://${localPath.replace(/\\/g, '/')}`;
 
 export const registerMusicHandlers = (mainWindow: BrowserWindow) => {
   // Manejador para abrir el diálogo de selección de archivos
@@ -78,4 +82,27 @@ export const registerMusicHandlers = (mainWindow: BrowserWindow) => {
       return [];
     }
   });
+
+
+  ipcMain.handle('get-audio-data', async (event, filePath: string) => {
+    try {
+      const buffer = fs.readFileSync(filePath);
+      const base64 = buffer.toString('base64');
+      const ext = filePath.split('.').pop()?.toLowerCase();
+      const mime = {
+        mp3: 'audio/mpeg',
+        wav: 'audio/wav',
+        ogg: 'audio/ogg',
+        aac: 'audio/aac',
+      }[ext || 'mp3'];
+
+      return `data:${mime};base64,${base64}`;
+    } catch (err) {
+      console.error('Error al leer archivo:', err);
+      return null;
+    }
+  });
+
 };
+
+
