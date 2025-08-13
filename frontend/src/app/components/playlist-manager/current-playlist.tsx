@@ -1,5 +1,5 @@
 
-import { Music, Edit, Trash2, MoreVertical, Heart } from 'lucide-react';
+import { Music, Trash2, MoreVertical, Heart } from 'lucide-react';
 import { useMusicStore, type Song } from '@/store/useMusic';
 import {
   DropdownMenu,
@@ -8,17 +8,37 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-
+import { FAVORITES_PLAYLIST_ID } from '@/store/useMusic';
+import { MediaSession } from '@/hooks/useMediaSession';
+import { previus, next } from '@/lib/howler/hwoler';
+import { useEffect } from 'react';
 
 
 export function CurrentPlaylist() {
-  const { currentPlaylist, selectedSong, toggleSongPlay, setSelectedSong, removeSongFromPlaylist, toggleLike, playlists } = useMusicStore();
+  const { playlistId ,currentPlaylist,  selectedSong, toggleSongPlay, setSelectedSong, removeSongFromPlaylist, addSongsToPlaylist, toggleLike, playlists } = useMusicStore();
   // Buscar el nombre de la playlist actual
+
+
+
+
   const currentPlaylistName = playlists.find(p => p.songs === currentPlaylist)?.name || "Playlist";
   // Estado para mostrar el diálogo de añadir canciones
-  const [showAddDialog, setShowAddDialog] = useState(false);
 
+
+  const handleOpenFile = async () => {
+    try {
+      const filePaths = await window.electronAPI.openFile();
+      
+      if (filePaths && Array.isArray(filePaths) && filePaths.length > 0) {
+        const songMetadata = await window.electronAPI.processMetadata(filePaths);
+        if (songMetadata && Array.isArray(songMetadata)) {
+          addSongsToPlaylist(songMetadata);
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar archivos:', error);
+    }
+  }
   const handleSongClick = (song: Song) => {
     setSelectedSong(song.id === selectedSong?.id ? undefined : song);
   };
@@ -28,37 +48,22 @@ export function CurrentPlaylist() {
       <div className="bg-gray-900/95 backdrop-blur-md border-t border-gray-800">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-orange-400/80 text-sm font-medium">{currentPlaylistName}</h3>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => setShowAddDialog(true)}
-              className="bg-orange-500 text-white"
-            >
-              Añadir canciones
-            </Button>
+        {playlistId !== FAVORITES_PLAYLIST_ID &&
+          <Button
+            variant="default"
+            size="sm"
+            onClick={handleOpenFile}
+            className="bg-orange-500 text-white"
+          >
+            Añadir canciones
+          </Button>}
           </div>
           <div className="flex items-center justify-center h-[168px] text-gray-500">
             No hay canciones en la cola
           </div>
         </div>
         {/* Dialogo para añadir canciones (placeholder visual) */}
-        {showAddDialog && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="bg-gray-900 rounded-lg shadow-lg p-6 w-full max-w-xs flex flex-col gap-4">
-              <h2 className="text-lg font-semibold text-orange-400">Añadir canciones</h2>
-              <div className="text-gray-400 text-sm">Funcionalidad pendiente...</div>
-              <div className="flex gap-2 justify-end">
-                <Button variant="ghost" onClick={() => setShowAddDialog(false)}>
-                  Cancelar
-                </Button>
-                <Button variant="default" onClick={() => setShowAddDialog(false)}>
-                  Listo
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+      
       </div>
     );
   }
@@ -67,15 +72,16 @@ export function CurrentPlaylist() {
     <div className="bg-gray-900/95 backdrop-blur-md border-t border-gray-800">
       <div className="mx-auto p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-orange-400/80 text-sm font-medium">{currentPlaylistName}</h3>
+          <h3 className="text-orange-400/80 text-sm font-medium">{currentPlaylistName}</h3> 
+        {playlistId !== FAVORITES_PLAYLIST_ID &&
           <Button
             variant="default"
             size="sm"
-            onClick={() => setShowAddDialog(true)}
+            onClick={handleOpenFile}
             className="bg-orange-500 text-white"
           >
             Añadir canciones
-          </Button>
+          </Button>}
         </div>
         <div className="space-y-2 h-[168px] overflow-y-auto custom-scrollbar pr-2">
           {currentPlaylist.map((song) => (
@@ -140,13 +146,13 @@ export function CurrentPlaylist() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-40 bg-gray-900/95 border border-orange-500/20">
-                    <DropdownMenuItem 
+                    {/* <DropdownMenuItem 
                       onClick={() => console.log('Editar', song.id)} 
                       className="gap-2 focus:bg-orange-500/10 focus:text-orange-400"
                     >
                       <Edit className="h-4 w-4" />
                       <span>Editar</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem 
                       onClick={() => removeSongFromPlaylist(song.id)}
                       className="gap-2 text-red-400 focus:text-red-400 focus:bg-red-500/10"
@@ -160,23 +166,7 @@ export function CurrentPlaylist() {
             </div>
           ))}
         </div>
-        {/* Dialogo para añadir canciones (placeholder visual) */}
-        {showAddDialog && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="bg-gray-900 rounded-lg shadow-lg p-6 w-full max-w-xs flex flex-col gap-4">
-              <h2 className="text-lg font-semibold text-orange-400">Añadir canciones</h2>
-              <div className="text-gray-400 text-sm">Funcionalidad pendiente...</div>
-              <div className="flex gap-2 justify-end">
-                <Button variant="ghost" onClick={() => setShowAddDialog(false)}>
-                  Cancelar
-                </Button>
-                <Button variant="default" onClick={() => setShowAddDialog(false)}>
-                  Listo
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+ 
       </div>
     </div>
   )

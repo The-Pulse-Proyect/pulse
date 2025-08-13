@@ -2,27 +2,12 @@ import ElectronNavbar from './app/components/navbar/navbar'
 import './App.css'
 import { MediaPlayerBar } from './app/components/player-controls/player-controls'
 import { useMusicStore } from './store/useMusic'
-import { Button } from './components/ui/button'
-import { Music } from 'lucide-react'
 import { Sidebar } from './app/components/sidebar/sidebar'
 
 function App() {
-  const { addSongsToPlaylist, currentSong } = useMusicStore();
+  const { currentSong } = useMusicStore();
 
-  const handleOpenFile = async () => {
-    try {
-      const filePaths = await window.electronAPI.openFile();
-      
-      if (filePaths && Array.isArray(filePaths) && filePaths.length > 0) {
-        const songMetadata = await window.electronAPI.processMetadata(filePaths);
-        if (songMetadata && Array.isArray(songMetadata)) {
-          addSongsToPlaylist(songMetadata);
-        }
-      }
-    } catch (error) {
-      console.error('Error al cargar archivos:', error);
-    }
-  }
+
 
   return (
     <div className='relative flex flex-col h-screen text-white bg-slate-900 overflow-hidden'>
@@ -61,16 +46,7 @@ function App() {
         <main className="flex-1 flex flex-col transition-all duration-300">
           <div className="flex-1 p-6">
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <h1 className="text-2xl font-bold text-orange-400">Mi Reproductor de Pulso</h1>
-                <Button
-                  onClick={handleOpenFile}
-                  className="bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-gray-900 shadow-lg shadow-orange-500/20 hover:shadow-orange-400/30 hover:scale-105 transition-all active:scale-95 font-semibold"
-                >
-                  <Music className="w-4 h-4" strokeWidth={2.5} />
-                  Cargar Música
-                </Button>
-              </div>
+
             </div>
           </div>
           <MediaPlayerBar />
