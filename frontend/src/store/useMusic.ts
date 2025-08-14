@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useSoundStore } from './useSound';
 
+
 export interface Song {
   id: string;
   title: string;
@@ -25,8 +26,6 @@ interface PlaylistInfo {
 }
 
 interface MusicState {
-  playlistId: string | null
-  setPlaylistId: (playlistId: string | null) => void
   currentSong?: Song;
   selectedSong?: Song;
   playlists: PlaylistInfo[];
@@ -53,8 +52,6 @@ export const useMusicStore = create<MusicState>()(
     (set, get) => ({
       currentSong: undefined,
       selectedSong: undefined,
-      playlistId: 'current-session',
-      setPlaylistId: (playlistId: string | null) => set({ playlistId }),
       playlists: [
         {
           id: FAVORITES_PLAYLIST_ID,
@@ -81,9 +78,6 @@ export const useMusicStore = create<MusicState>()(
 
       setCurrentSong: (song) => 
       {
-       
-
-
         set((state) => ({
           currentSong: { ...song, isPlaying: true },
           currentPlaylist: state.currentPlaylist.map(s => 
@@ -108,17 +102,16 @@ export const useMusicStore = create<MusicState>()(
 
       addSongsToPlaylist: (songs) =>
         set((state) => {
-          const { currentPlaylist, playlistId } = get()
           const newSongs = songs.map((song) => ({
             ...song,
             id: crypto.randomUUID(),
             isPlaying: false,
             isLiked: false
           }));
-          console.log(currentPlaylist)
+
           // Actualizar la playlist de sesión actual
           const updatedPlaylists = state.playlists.map(playlist => 
-            playlist.id === playlistId
+            playlist.id === CURRENT_SESSION_PLAYLIST_ID
               ? { ...playlist, songs: [...playlist.songs, ...newSongs] }
               : playlist
           );
@@ -265,7 +258,6 @@ export const useMusicStore = create<MusicState>()(
           const song = state.currentPlaylist.find(s => s.id === songId);
           if (!song) return state;
           playSound(song.filePath)
-
           return {
             currentSong: song,
             isPlaying: true,

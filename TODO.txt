@@ -1,2 +1,5 @@
+Modo mini
+Instalador de aplicacion
+bug de recorrido de tiempo en el progress bar
 
-anadir soporte a media services nativos de windows y linux
+Planteamiento de siguientes funciones
