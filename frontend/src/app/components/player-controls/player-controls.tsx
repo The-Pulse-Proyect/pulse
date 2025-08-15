@@ -6,13 +6,12 @@ import { ProgressBar } from "./progress-bar"
 import { CurrentPlaylist } from "../playlist-manager/current-playlist"
 import { useMusicStore } from "@/store/useMusic"
 import "./scrollbar.css"
-import { CavaVisualizer } from "../cava/cava-visualizer"
 import { useSoundStore } from "@/store/useSound"
 import { next, previus } from "@/lib/howler/hwoler"
+import {useHotkeys} from "@/hooks/useHotkeys.ts";
 
 export function MediaPlayerBar() {
   const [currentTime, setCurrentTime] = useState(0)
-
 
   const { currentSong, isPlaying, setIsPlaying, toggleLike } = useMusicStore()
   const { currentSound, isShuffled, setIsShuffled, repeatMode, setRepeatMode } = useSoundStore()
@@ -32,7 +31,29 @@ export function MediaPlayerBar() {
     }
   }, [isPlaying, currentSound]);
 
-  
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying)
+  }
+
+  const seekForward = () => {
+    if (currentSong) {
+      const currentTime = currentSound.seek();
+      currentSound.seek(currentTime + 5);
+    }
+  };
+
+  const seekBackward = () => {
+    if (currentSong) {
+      const currentTime = currentSound.seek();
+      currentSound.seek(currentTime - 5);
+    }
+  };
+
+  useHotkeys('space', handlePlayPause)
+  useHotkeys('arrowright', seekForward)
+  useHotkeys('arrowleft', seekBackward)
+  useHotkeys('shift+arrowright', next)
+  useHotkeys('shift+arrowleft', previus)
 
   return (
     <div className="w-full border-t border-gray-800">

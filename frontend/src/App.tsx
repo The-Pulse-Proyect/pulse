@@ -6,8 +6,6 @@ import { useMusicStore } from './store/useMusic'
 import { Sidebar } from './app/components/sidebar/sidebar'
 import { useEffect, useState } from 'react'
 
-
-
 function App() {
   const { currentSong } = useMusicStore();
   const [miniMode, setMiniMode] = useState(false);
