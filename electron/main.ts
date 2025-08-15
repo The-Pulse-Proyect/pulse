@@ -6,6 +6,7 @@ import electronSquirrelStartup from 'electron-squirrel-startup';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 let mainWindow: BrowserWindow;
+let userSettings: any = {};
 
 async function loadUserSettings() {
   const userDataPath = app.getPath('userData');
