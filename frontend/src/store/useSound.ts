@@ -10,6 +10,8 @@ interface SoundState {
   setIsShuffled: (isShuffled: boolean) => void;
   repeatMode: boolean;
   setRepeatMode: (repeatMode: boolean) => void;    
+  spectrumData: number[];
+  setSpectrumData: (data: number[]) => void;
 }
 
 export const useSoundStore = create<SoundState>()((set) => ({
@@ -20,5 +22,7 @@ export const useSoundStore = create<SoundState>()((set) => ({
   currentSound: null,
   setCurrentSound: (sound) => set({ currentSound: sound }),
   currentTime: 0,
-  setCurrentTime: (time: number) => set({ currentTime: time})
+  setCurrentTime: (time: number) => set({ currentTime: time}),
+  spectrumData: Array(30).fill(5),
+  setSpectrumData: (data: number[]) => set({ spectrumData: data }),
 }))

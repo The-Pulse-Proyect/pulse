@@ -1,10 +1,16 @@
 import { BrowserWindow } from 'electron';
 import path from 'path';
 
+
+// Guardar tamaño original para restaurar
+let originalBounds: Electron.Rectangle | null = null;
+
 export const createMainWindow = (isDev: boolean): BrowserWindow => {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    minWidth: 320,
+    minHeight: 180,
     frame: false,
     titleBarStyle: 'hidden',
     webPreferences: {
@@ -14,6 +20,9 @@ export const createMainWindow = (isDev: boolean): BrowserWindow => {
       sandbox: false
     },
   });
+
+  // Guardar tamaño original al crear
+  originalBounds = mainWindow.getBounds();
 
   if (isDev) {
     try {
@@ -27,6 +36,7 @@ export const createMainWindow = (isDev: boolean): BrowserWindow => {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../../frontend/dist/index.html'));
   }
+
 
   return mainWindow;
 };

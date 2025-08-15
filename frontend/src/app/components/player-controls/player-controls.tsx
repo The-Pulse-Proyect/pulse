@@ -40,11 +40,11 @@ export function MediaPlayerBar() {
         {/* Panel de controles principal */}
         <div className="relative flex flex-col bg-gradient-to-b from-gray-900/95 to-gray-900">
           {/* Visualizador */}
-          {currentSong && (
+          {/* {currentSong && (
             <div className="absolute inset-x-0 -top-20 h-20">
               <CavaVisualizer isPlaying={isPlaying} />
             </div>
-          )}
+          )} */}
           
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex flex-1 w-full items-center gap-8">

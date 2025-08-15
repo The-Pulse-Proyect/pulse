@@ -1,109 +1,34 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
-import './cava-visualizer.css'
+// components/CavaVisualizer.tsx
+import { useRef } from 'react';
+import { useResponsiveBars } from '@/hooks/useResponsiveBars';
+import { useCavaSpectrum } from '@/hooks/useSpectrumData';
+import { useMusicStore } from '@/store/useMusic';
+import './cava-visualizer.css';
 
-interface CavaVisualizerProps {
-  isPlaying?: boolean;
-}
+export function CavaVisualizer() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const isPlaying = useMusicStore((s) => s.isPlaying);
 
-export function CavaVisualizer({ isPlaying = false }: CavaVisualizerProps) {
-  const [numberOfBars, setNumberOfBars] = useState(30);
+  const numberOfBars = useResponsiveBars(containerRef, {
+    min: 16,
+    max: 48,
+    targetBarWidth: 12,
+    gap: 4,
+    debounceMs: 50,
+  });
 
-  const updateBarsCount = useCallback(() => {
-    const width = window.innerWidth;
-    if (width < 500) { // móvil pequeño
-      setNumberOfBars(10);
-    } else if (width < 640) { // móvil
-      setNumberOfBars(14);
-    } else if (width < 768) { // tablet pequeña
-      setNumberOfBars(18);
-    } else if (width < 1024) { // tablet
-      setNumberOfBars(22);
-    } else if (width < 1280) { // desktop pequeño
-      setNumberOfBars(26);
-    } else { // desktop grande
-      setNumberOfBars(30);
-    }
-  }, []);
-
-  useEffect(() => {
-    updateBarsCount();
-    window.addEventListener('resize', updateBarsCount);
-    return () => window.removeEventListener('resize', updateBarsCount);
-  }, [updateBarsCount]);
-
-  const [spectrumData, setSpectrumData] = useState<number[]>([]);
-
-  // Actualizar spectrumData cuando cambia numberOfBars
-  useEffect(() => {
-    pausedValues.current = Array(numberOfBars).fill(5);
-    setSpectrumData(isPlaying 
-      ? Array.from({ length: numberOfBars }, () => Math.random() * 100)
-      : pausedValues.current
-    );
-  }, [numberOfBars, isPlaying]);
-
-  // Estado de referencia para las barras en pausa
-  const pausedValues = useRef(Array(numberOfBars).fill(5));
-
-  // Modo de prueba: siempre activo
-  useEffect(() => {
-    // Si no está reproduciendo, establecer los valores de pausa una sola vez
-    if (!isPlaying) {
-      setSpectrumData(pausedValues.current);
-      return;
-    }
-
-    let prevValues = spectrumData;
-    const momentum = Array(numberOfBars).fill(0);
-    
-    const interval = setInterval(() => {
-      setSpectrumData(prev => {
-        const targetValues = prev.map((_, index) => {
-          const time = Date.now() / 1000;
-          
-          // Múltiples ondas para una simulación más rica
-          const bass = Math.sin(time * 1.5 + index * 0.2) * 0.7 + 0.7;
-          const mid = Math.sin(time * 3 + index * 0.3) * 0.5 + 0.5;
-          const high = Math.sin(time * 6 + index * 0.4) * 0.3 + 0.3;
-          
-          // Ruido controlado
-          const noise = (Math.random() - 0.5) * 6;
-          
-          // Amplitud que favorece frecuencias bajas
-          const baseAmplitude = 85 - (index / (numberOfBars - 1)) * 30;
-          
-          // Patrones de énfasis cada 4 barras
-          const emphasis = index % 4 === 0 ? 1.2 : 1;
-          
-          return Math.max(5, Math.min(100, 
-            ((bass + mid + high) * baseAmplitude + noise) * emphasis
-          ));
-        });
-
-        // Aplicar inercia al movimiento
-        const newValues = targetValues.map((target, i) => {
-          const diff = target - prevValues[i];
-          momentum[i] = momentum[i] * 0.8 + diff * 0.2;
-          return prevValues[i] + momentum[i];
-        });
-
-        prevValues = newValues;
-        return newValues;
-      });
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, numberOfBars, spectrumData]);
+  const spectrum = useCavaSpectrum(numberOfBars);
 
   return (
-    <div className="cava-container">
-      {spectrumData.map((height, index) => (
+    <div ref={containerRef} className="cava-container">
+      {spectrum.map((h, i) => (
         <div
-          key={index}
+          key={i}
           className="spectrum-bar"
           style={{
-            height: `${height}%`,
-            animationDelay: `${index * 0.02}s`
+            height: `${h}%`,
+            // Animación de entrada escalonada
+            animationDelay: `${i * 10}ms`,
           }}
         />
       ))}
