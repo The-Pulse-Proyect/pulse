@@ -1,10 +1,11 @@
-import { app, BrowserWindow } from 'electron';
+import {app, BrowserWindow, ipcMain} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { createMainWindow } from './window/mainWindow';
 import { registerWindowControls } from './handlers/windowControls';
 import { registerMusicHandlers } from './handlers/musicHandlers';
 import electronSquirrelStartup from 'electron-squirrel-startup';
+import shell = Electron.shell;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 let mainWindow: BrowserWindow;
@@ -43,10 +44,22 @@ if (electronSquirrelStartup) {
 }
 
 const initialize = () => {
+  loadUserSettings();
   mainWindow = createMainWindow(isDev);
   registerWindowControls();
   registerMusicHandlers(mainWindow);
 };
+
+
+ipcMain.handle('config:get', () => {
+  return userSettings;
+});
+
+ipcMain.handle('config:open-folder', () => {
+  const configPath = path.join(app.getPath('userData'), 'config');
+  shell.openPath(configPath);
+});
+
 
 // This method will be called when Electron has finished initialization
 app.on('ready', initialize);
