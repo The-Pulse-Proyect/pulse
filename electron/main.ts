@@ -7,6 +7,33 @@ import electronSquirrelStartup from 'electron-squirrel-startup';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 let mainWindow: BrowserWindow;
 
+async function loadUserSettings() {
+  const userDataPath = app.getPath('userData');
+  const configPath = path.join(userDataPath, 'config');
+
+  try {
+    await fs.access(configPath);
+  } catch {
+    await fs.mkdir(configPath, { recursive: true });
+  }
+
+  const settingsFilePath = path.join(configPath, 'settings.json');
+
+  try {
+    await fs.access(settingsFilePath);
+    const fileContent = await fs.readFile(settingsFilePath, 'utf-8');
+    userSettings = JSON.parse(fileContent);
+  } catch {
+    const defaultConfig = {
+      welcomeMessage: "Hola desde tu configuración personalizada!",
+      autoPlay: false,
+      theme: "dark"
+    };
+    await fs.writeFile(settingsFilePath, JSON.stringify(defaultConfig, null, 2));
+    userSettings = defaultConfig;
+  }
+}
+
 const isDev = !app.isPackaged;
 if (electronSquirrelStartup) {
   app.quit();
