@@ -1,4 +1,6 @@
 import { app, BrowserWindow } from 'electron';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 import { createMainWindow } from './window/mainWindow';
 import { registerWindowControls } from './handlers/windowControls';
 import { registerMusicHandlers } from './handlers/musicHandlers';
