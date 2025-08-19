@@ -11,119 +11,15 @@
 
   pointer-events: none;
   overflow: hidden;
-  perspective: 1200px;
-  transform-style: preserve-3d;
-  transform: translateY(-5%);
+ 
 }
 
-.spectrum-bar {
-  flex: 1;
-  max-width: 24px;
-  min-width: 6px;
-  background: linear-gradient(
-    to top,
-    rgba(255, 140, 50, 0.95),
-    rgba(255, 140, 50, 0.2)
-  );
-  border-radius: 4px;
-  transition: transform 0.05s ease-out;
-  position: relative;
-  box-shadow: 0 0 12px rgba(255, 140, 50, 0.15);
-  transform: rotateX(25deg) translateZ(-20px);
-  transform-origin: bottom;
-  will-change: height, transform;
-  animation: barIntro 0.4s ease-out backwards;
-}
-
-@keyframes barIntro {
-  from {
-    transform: rotateX(25deg) translateZ(-20px) scaleY(0);
-    opacity: 0;
-  }
-  to {
-    transform: rotateX(25deg) translateZ(-20px) scaleY(1);
-    opacity: 1;
-  }
-}
-
-/* Reflejo en el "suelo" con mejor performance */
-.spectrum-bar::after {
-  content: '';
-  position: absolute;
-  bottom: -100%;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 140, 50, 0.1),
-    transparent
-  );
-  transform: scaleY(0.5);
-  transform-origin: top;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-/* Brillo superior mejorado */
-.spectrum-bar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.2) 10%,
-    transparent 50%
-  );
-  border-radius: inherit;
-  opacity: 0.8;
-  mix-blend-mode: soft-light;
-}
-
-/* Estado activo y transiciones mejoradas */
-.spectrum-bar {
-  transition: 
-    height 0.05s ease-out,
-    transform 0.1s ease-out,
-    background-color 0.2s ease;
-}
-
-/* Barras activas */
-.spectrum-bar[style*="height: 50"] {
-  background: linear-gradient(
-    to top,
-    rgba(255, 140, 50, 1),
-    rgba(255, 180, 100, 0.6)
-  );
-  transform: rotateX(25deg) translateZ(-15px) scaleY(1.02);
-  box-shadow: 
-    0 0 20px rgba(255, 140, 50, 0.3),
-    0 0 40px rgba(255, 140, 50, 0.1);
-}
-
-/* Barras al máximo */
-.spectrum-bar[style*="height: 90"] {
-  background: linear-gradient(
-    to top,
-    rgb(255, 140, 50),
-    rgba(255, 200, 100, 0.8)
-  );
-  transform: rotateX(25deg) translateZ(-10px) scaleY(1.05);
-  box-shadow: 
-    0 0 30px rgba(255, 140, 50, 0.4),
-    0 0 60px rgba(255, 140, 50, 0.2);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .cava-container {
-    gap: 1px;
-    padding: 0 10px;
-  }
-  
-  .spectrum-bar {
-    max-width: 16px;
-    min-width: 4px;
-  }
+.bar {
+  display: inline-block;
+  background: linear-gradient(to top, #ff8c00, #ffa500); /* Degradado naranja */
+  margin: 0 2px;
+  width: 25px;
+  border-radius: 5px 5px 0 0; /* Bordes superiores redondeados */
+  transition: height 0.1s ease-out;
+  box-shadow: 0 0 5px rgba(255, 165, 0, 0.7); /* Efecto de brillo */
 }

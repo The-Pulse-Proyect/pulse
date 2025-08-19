@@ -5,6 +5,7 @@ import { MediaPlayerBar } from './app/components/player-controls/player-controls
 import { useMusicStore } from './store/useMusic'
 import { Sidebar } from './app/components/sidebar/sidebar'
 import { useEffect, useState } from 'react'
+import MiniMusicPlayer from './app/mini-mode/mini-mode'
 
 
 
@@ -29,45 +30,7 @@ function App() {
 
   if (miniMode) {
     return (
-      <div className="h-screen w-screen bg-slate-900 flex flex-col items-center justify-center select-none">
-        {/* Contenido centrado y arrastrable */}
-        <div 
-          className="absolute inset-0"
-          style={{ 
-            // @ts-expect-error - propiedad específica de electron
-            WebkitAppRegion: 'drag' 
-          }}
-        />
-        <span className="text-lg font-bold text-white animate-pulse relative z-10">
-          En Desarrollo
-        </span>
-        <div 
-          className="absolute bottom-4 flex gap-2"
-          style={{ 
-            // @ts-expect-error - propiedad específica de electron
-            WebkitAppRegion: 'no-drag'
-          }}
-        >
-          <button
-            className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition-colors text-white"
-            onClick={() => window.electronAPI.closeApp()}
-          >
-            Cerrar
-          </button>
-          <button
-            className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition-colors text-white"
-            onClick={() => window.electronAPI.maximizeApp()}
-          >
-            Restaurar
-          </button>
-          <button
-            className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition-colors text-white"
-            onClick={() => window.electronAPI.minimizeApp()}
-          >
-            Ocultar
-          </button>
-        </div>
-      </div>
+      <MiniMusicPlayer></MiniMusicPlayer>
     );
   }
 
