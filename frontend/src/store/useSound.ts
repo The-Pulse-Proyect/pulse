@@ -7,18 +7,25 @@ interface SoundState {
   currentTime: number;
   setCurrentTime: (time: number) => void;
   isShuffled: boolean;
-  setIsShuffled: (isShuffled: boolean) => void;
+  toggleShuffle: () => void;
   repeatMode: boolean;
-  setRepeatMode: (repeatMode: boolean) => void;    
+  toggleRepeatMode: () => void;
   spectrumData: number[];
   setSpectrumData: (data: number[]) => void;
 }
 
-export const useSoundStore = create<SoundState>()((set) => ({
+export const useSoundStore = create<SoundState>()((set, get) => ({
   isShuffled: false,
-  setIsShuffled: (isShuffled: boolean) => set({ isShuffled }),
-  setRepeatMode: (repeatMode: boolean) => set({ repeatMode }),
+  toggleShuffle: () => set((state) => ({ isShuffled: !state.isShuffled })),
   repeatMode: false,
+  toggleRepeatMode: () => {
+    const { currentSound, repeatMode } = get()
+    const newRepeatMode = !repeatMode
+    if (currentSound) {
+      currentSound.loop(newRepeatMode)
+    }
+    set({ repeatMode: newRepeatMode })
+  },
   currentSound: null,
   setCurrentSound: (sound) => set({ currentSound: sound }),
   currentTime: 0,

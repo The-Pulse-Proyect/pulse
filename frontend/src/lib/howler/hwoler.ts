@@ -27,27 +27,36 @@ export async function playSound(filePath: string) {
         html5: true, // Permite la reproducción de archivos grandes sin cargar todo en memoria
         
         volume: 1.0,
-        loop: repeatMode,
+        loop: useSoundStore.getState().repeatMode, // Asegura que siempre se use el estado más reciente
         onloaderror: (id, err) => console.error('Error al cargar el audio:', err),
         onend: () => {
+            const { repeatMode, isShuffled } = useSoundStore.getState();
+            const { currentPlaylist, currentSong, setCurrentSong } = useMusicStore.getState();
+
             if (repeatMode) {
+                // Howler se encarga del bucle, no hacemos nada aquí.
                 return;
             }
-            if (isShuffled) {
-                const songIndex = currentPlaylist.findIndex(song => song.id === currentSong?.id);
-                const index = getRandomIndexExcluding(currentPlaylist, songIndex)
-                setCurrentSong(currentPlaylist[index]);
-                playSound(currentPlaylist[index].filePath)
-                return
-            }
-            // Si no está en modo repetición, pasamos a la siguiente canción
+
+            let nextSong;
             const songIndex = currentPlaylist.findIndex(song => song.id === currentSong?.id);
-            if (songIndex < currentPlaylist.length - 1) {
-                setCurrentSong(currentPlaylist[songIndex + 1]);
+
+            if (isShuffled) {
+                const nextIndex = getRandomIndexExcluding(currentPlaylist, songIndex);
+                nextSong = currentPlaylist[nextIndex];
             } else {
-                setCurrentSong(currentPlaylist[0]); // Reinicia al primer elemento si es el último
+                const isLastSong = songIndex === currentPlaylist.length - 1;
+                nextSong = isLastSong ? currentPlaylist[0] : currentPlaylist[songIndex + 1];
             }
-            playSound(currentPlaylist[songIndex + 1]?.filePath || currentPlaylist[0].filePath);
+
+            if (nextSong) {
+                setCurrentSong(nextSong);
+                playSound(nextSong.filePath);
+            } else {
+                // Si no hay próxima canción (lista vacía o error), detenemos la reproducción.
+                const { setIsPlaying } = useMusicStore.getState();
+                setIsPlaying(false);
+            }
         },
     })
 
