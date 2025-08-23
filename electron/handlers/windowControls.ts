@@ -24,7 +24,9 @@ export const registerWindowControls = () => {
       previousBounds = win.getBounds();
       const display = require('electron').screen.getPrimaryDisplay();
       const { width, height } = display.workAreaSize;
-      
+      if (win.isMaximized()) {
+          win.unmaximize();
+        }
       win.setPosition(width - 340 - 20, height - 200);
       win.setSize(340, 120);
       win.setResizable(false);
@@ -34,12 +36,9 @@ export const registerWindowControls = () => {
       isMiniMode = true;
     } else if (!enable && isMiniMode) {
       // Restaurar el estado anterior
-      if (previousBounds) {
-        win.setBounds(previousBounds);
-      } else {
         win.setSize(1200, 800);
         win.center();
-      }
+      
       win.setResizable(true);
       win.setAlwaysOnTop(false);
       win.setMovable(true);

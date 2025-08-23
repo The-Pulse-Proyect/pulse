@@ -4,7 +4,7 @@ import './App.css'
 import { MediaPlayerBar } from './app/components/player-controls/player-controls'
 import { useMusicStore } from './store/useMusic'
 import { Sidebar } from './app/components/sidebar/sidebar'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import MiniMusicPlayer from './app/mini-mode/mini-mode'
 
 
@@ -28,14 +28,14 @@ function App() {
     };
   }, []);
 
-  if (miniMode) {
-    return (
-      <MiniMusicPlayer></MiniMusicPlayer>
-    );
-  }
-
   return (
-    <div className='relative flex flex-col h-screen text-white bg-slate-900 overflow-hidden'>
+    <>
+    {miniMode &&
+      <MiniMusicPlayer></MiniMusicPlayer>
+    }
+    <div className='relative flex flex-col h-screen text-white bg-slate-900 overflow-hidden' style={{
+      display: miniMode ? "none" : "flex"
+    }}>
       {/* Fondo con la portada actual */}
       {currentSong?.coverUrl && (
         <div 
@@ -75,6 +75,7 @@ function App() {
         </main>
       </div>
     </div>
+    </>
   )
 }
 
