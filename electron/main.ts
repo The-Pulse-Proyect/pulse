@@ -1,11 +1,11 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserWindow, ipcMain, shell} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { createMainWindow } from './window/mainWindow';
 import { registerWindowControls } from './handlers/windowControls';
 import { registerMusicHandlers } from './handlers/musicHandlers';
 import electronSquirrelStartup from 'electron-squirrel-startup';
-import shell = Electron.shell;
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 let mainWindow: BrowserWindow;

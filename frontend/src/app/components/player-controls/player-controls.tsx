@@ -12,10 +12,11 @@ import { next, previus } from "@/lib/howler/hwoler"
 import {useHotkeys} from "@/hooks/useHotkeys.ts";
 
 import VolumeControl from "./volume-control"
+import { CavaVisualizer } from "../cava/cava-visualizer"
 
 export function MediaPlayerBar() {
   const [currentTime, setCurrentTime] = useState(0)
-  const [volume, setVolume] = useState(0)
+  const [volume, setVolume] = useState(100)
 
   const { currentSong, isPlaying, setIsPlaying, toggleLike } = useMusicStore()
   const { currentSound, isShuffled, toggleShuffle, repeatMode, toggleRepeatMode } = useSoundStore()

@@ -1,5 +1,0 @@
-Modo mini
-Instalador de aplicacion
-bug de recorrido de tiempo en el progress bar
-
-Planteamiento de siguientes funciones

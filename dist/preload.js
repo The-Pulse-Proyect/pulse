@@ -13,6 +13,8 @@ const electronHandler = {
     setMiniMode: (enable) => electron_1.ipcRenderer.invoke('set-mini-mode', enable),
     openFile: () => electron_1.ipcRenderer.invoke('dialog:openFile'),
     processMetadata: (filePaths) => electron_1.ipcRenderer.invoke('music:processMetadata', filePaths),
+    getUserConfig: () => electron_1.ipcRenderer.invoke('config:get'),
+    openConfigFolder: () => electron_1.ipcRenderer.invoke('config:open-folder'),
     // Musica
     getAudioData: (filePath) => electron_1.ipcRenderer.invoke('get-audio-data', filePath)
 };

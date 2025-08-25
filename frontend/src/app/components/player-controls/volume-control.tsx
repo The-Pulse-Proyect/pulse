@@ -14,7 +14,7 @@ interface VolumeControlProps {
 export default function VolumeControl({ volume, onVolumeChange }: VolumeControlProps) {
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
-  const [sliderValue, setSliderValue] = useState(volume)
+  const [sliderValue, setSliderValue] = useState(100)
   const containerRef = useRef<HTMLDivElement>(null)
   const { currentSound } = useSoundStore.getState()
 

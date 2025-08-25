@@ -22,4 +22,4 @@ const electronHandler = {
   getAudioData: (filePath: string) => ipcRenderer.invoke('get-audio-data', filePath)
 };
 
-contextBri2dge.exposeInMainWorld('electronAPI', electronHandler);
+contextBridge.exposeInMainWorld('electronAPI', electronHandler);
