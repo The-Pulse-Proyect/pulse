@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat, Music2 } from 'lucide-react'
+import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat } from 'lucide-react'
 
 interface PlaybackControlsProps {
   isPlaying: boolean

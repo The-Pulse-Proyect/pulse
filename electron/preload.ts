@@ -16,9 +16,10 @@ const electronHandler = {
   setMiniMode: (enable: boolean) => ipcRenderer.invoke('set-mini-mode', enable),
   openFile: (): Promise<string[]> => ipcRenderer.invoke('dialog:openFile'),
   processMetadata: (filePaths: string[]): Promise<Song[]> => ipcRenderer.invoke('music:processMetadata', filePaths),
-
+  getUserConfig: () => ipcRenderer.invoke('config:get'),
+  openConfigFolder: () => ipcRenderer.invoke('config:open-folder'),
   // Musica
   getAudioData: (filePath: string) => ipcRenderer.invoke('get-audio-data', filePath)
 };
 
-contextBridge.exposeInMainWorld('electronAPI', electronHandler);
+contextBri2dge.exposeInMainWorld('electronAPI', electronHandler);
