@@ -18,7 +18,7 @@ export function MediaPlayerBar() {
   const [volume, setVolume] = useState(0)
 
   const { currentSong, isPlaying, setIsPlaying, toggleLike } = useMusicStore()
-  const { currentSound, isShuffled, setIsShuffled, repeatMode, setRepeatMode } = useSoundStore()
+  const { currentSound, isShuffled, toggleShuffle, repeatMode, toggleRepeatMode } = useSoundStore()
   
   const handleProgressChange = (value: number[]) => {
     setCurrentTime(value[0])
@@ -79,10 +79,10 @@ export function MediaPlayerBar() {
                 isShuffled={isShuffled}
                 repeatMode={repeatMode}
                 onPlayPause={() => setIsPlaying(!isPlaying)}
-                onShuffle={() => setIsShuffled(!isShuffled)}
+                onShuffle={toggleShuffle}
                 onPrevious={previus}
                 onNext={next}
-                onRepeat={() => setRepeatMode(!repeatMode)}
+                onRepeat={toggleRepeatMode}
               />
               
               {/* Barra de progreso */}
