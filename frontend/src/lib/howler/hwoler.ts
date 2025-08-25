@@ -24,7 +24,7 @@ export async function playSound(filePath: string) {
 
     const sound = new Howl({
         src: [data],
-        html5: false, // Permite la reproducción de archivos grandes sin cargar todo en memoria
+        html5: true, // Permite la reproducción de archivos grandes sin cargar todo en memoria
         
         volume: 1.0,
         loop: repeatMode,

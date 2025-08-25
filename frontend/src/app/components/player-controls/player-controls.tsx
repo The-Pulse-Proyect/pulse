@@ -8,10 +8,14 @@ import { useMusicStore } from "@/store/useMusic"
 import "./scrollbar.css"
 import { useSoundStore } from "@/store/useSound"
 import { next, previus } from "@/lib/howler/hwoler"
+
 import {useHotkeys} from "@/hooks/useHotkeys.ts";
+
+import VolumeControl from "./volume-control"
 
 export function MediaPlayerBar() {
   const [currentTime, setCurrentTime] = useState(0)
+  const [volume, setVolume] = useState(0)
 
   const { currentSong, isPlaying, setIsPlaying, toggleLike } = useMusicStore()
   const { currentSound, isShuffled, setIsShuffled, repeatMode, setRepeatMode } = useSoundStore()
@@ -61,11 +65,11 @@ export function MediaPlayerBar() {
         {/* Panel de controles principal */}
         <div className="relative flex flex-col bg-gradient-to-b from-gray-900/95 to-gray-900">
           {/* Visualizador */}
-          {/* {currentSong && (
+          {currentSong && (
             <div className="absolute inset-x-0 -top-20 h-20">
-              <CavaVisualizer isPlaying={isPlaying} />
+              <CavaVisualizer  />
             </div>
-          )} */}
+          )}
           
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex flex-1 w-full items-center gap-8">
@@ -92,18 +96,24 @@ export function MediaPlayerBar() {
             </div>
             
             {/* Botón de Me gusta */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => currentSong && toggleLike(currentSong.id)}
-              className={`p-2 h-8 w-8 rounded-lg transition-all duration-200 ${
-                currentSong?.isLiked
+            <div className="flex gap-x-2">
+
+              <VolumeControl volume={volume} onVolumeChange={setVolume}/>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => currentSong && toggleLike(currentSong.id)}
+                className={`p-2 h-8 w-8 rounded-lg transition-all duration-200 ${
+                  currentSong?.isLiked
                   ? 'text-orange-400 hover:text-orange-300 bg-orange-400/10 hover:bg-orange-400/20' 
                   : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${currentSong?.isLiked ? 'fill-current' : ''}`} />
-            </Button>
+                }`}
+                >
+                <Heart className={`w-4 h-4 ${currentSong?.isLiked ? 'fill-current' : ''}`} />
+              </Button>
+            </div>
+
+            
           </div>
         </div>
 

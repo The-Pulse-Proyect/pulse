@@ -3,6 +3,7 @@ import { playSound } from '@/lib/howler/hwoler';
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useSoundStore } from './useSound';
+import { cleanupAudioNodes } from '@/hooks/useSpectrumData';
 
 
 export interface Song {
