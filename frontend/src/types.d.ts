@@ -5,6 +5,7 @@ interface ElectronAPI {
   maximizeApp: () => void;
   closeApp: () => void;
   setMiniMode: (enable: boolean) => void;
+  openConfigFolder: () => void;
 }
 
 interface Window {
