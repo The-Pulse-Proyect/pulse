@@ -54,11 +54,21 @@ export function MediaPlayerBar() {
     }
   };
 
+  const setVolumeUp = () => {
+    setVolume(volume + 5);
+  }
+
+  const setVolumeDown = () => {
+    setVolume(volume - 5);
+  }
+
   useHotkeys('space', handlePlayPause)
   useHotkeys('arrowright', seekForward)
   useHotkeys('arrowleft', seekBackward)
   useHotkeys('shift+arrowright', next)
   useHotkeys('shift+arrowleft', previus)
+  useHotkeys('arrowup', setVolumeUp)
+  useHotkeys('arrowdown', setVolumeDown)
 
   return (
     <div className="w-full border-t border-gray-800">
