@@ -1,0 +1,43 @@
+directories:
+  output: release
+  buildResources: assets
+appId: com.pulse-project.app
+productName: Pulse Music Player
+copyright: Copyright © 2025
+files:
+  - filter:
+      - dist/**/*
+      - frontend/dist/**/*
+      - assets/**/*
+      - package.json
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  icon: assets/logo.ico
+mac:
+  target:
+    - dmg
+  icon: assets/logo.icns
+  category: public.app-category.music
+linux:
+  target:
+    - AppImage
+    - deb
+  icon: assets/logo.png
+  category: Audio
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Pulse Music
+publish:
+  provider: github
+  owner: The-Pulse-Proyect
+  repo: pulse
+electronVersion: 37.3.1

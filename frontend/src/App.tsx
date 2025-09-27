@@ -34,28 +34,41 @@ function App() {
     <div className='relative flex flex-col h-screen text-white bg-slate-900 overflow-hidden' style={{
       display: miniMode ? "none" : "flex"
     }}>
-      {/* Fondo con la portada actual */}
-      {currentSong?.coverUrl && (
+      {/* Fondo dinámico con la portada actual */}
+      <div className="background-artwork">
+        <div className="artwork-container">
+          {currentSong?.coverUrl ? (
+            <>
+              <div 
+                className="artwork-image animate-fade-in"
+                style={{
+                  backgroundImage: `url(${currentSong.coverUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
+              />
+              <div className="artwork-overlay" />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-800" />
+          )}
+        </div>
+      </div>
+      
+      {/* Gradientes de ambiente */}
+      <div className="fixed inset-0 pointer-events-none z-0">
         <div 
-          className="fixed inset-0 pointer-events-none" 
+          className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent opacity-90"
+          style={{ mixBlendMode: 'multiply' }}
+        />
+        <div 
+          className="absolute inset-0"
           style={{
-            backgroundImage: `url(${currentSong.coverUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            filter: 'blur(5px)',
-            transform: 'scale(1.2)',
-            opacity: '0.5',
-            transition: 'all 0.5s ease-out'
+            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 60%)',
+            mixBlendMode: 'soft-light'
           }}
         />
-      )}
-      {/* Gradientes oscuros superpuestos */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent opacity-80" />
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(circle at center, transparent 0%, rgba(17,24,39,0.3) 50%, rgba(17,24,39,0.9) 100%)'
-        }} />
       </div>
 
       <div className="sticky top-0 z-50">

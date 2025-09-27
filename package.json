@@ -1,18 +1,23 @@
 {
   "name": "pulse",
   "version": "1.0.0",
-  "description": "",
+  "description": "A modern music player built with Electron",
   "main": "dist/main.js",
   "scripts": {
     "dev": "concurrently \"npm:watch:main\" \"npm:dev:frontend\" \"npm:dev:electron\"",
     "dev:frontend": "cd frontend && vite",
     "predev:electron": "npm run build:main",
-    "dev:electron": "wait-on http://localhost:5173 && electron . --inspect",
+    "dev:electron": "tsc && electron . --inspect",
     "watch:main": "tsc --watch",
     "build": "npm run build:frontend && npm run build:main",
     "build:frontend": "cd frontend && vite build",
     "build:main": "tsc",
-    "start": "npm run build && electron ."
+    "start": "npm run build && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "npm run build && electron-builder",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:linux": "npm run build && electron-builder --linux"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +30,7 @@
     "@types/node": "^24.1.0",
     "concurrently": "^8.2.2",
     "electron": "^37.2.6",
+    "electron-builder": "^26.0.12",
     "electron-reloader": "^1.2.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
@@ -36,5 +42,55 @@
     "electron-squirrel-startup": "^1.0.1",
     "express": "^5.1.0",
     "music-metadata": "^11.7.3"
+  },
+  "build": {
+    "appId": "com.pulse-project.app",
+    "productName": "Pulse Music Player",
+    "copyright": "Copyright © 2025",
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "frontend/dist/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/logo.ico"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "assets/logo.icns",
+      "category": "public.app-category.music"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "assets/logo.png",
+      "category": "Audio"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Pulse Music"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "The-Pulse-Proyect",
+      "repo": "pulse"
+    }
   }
 }

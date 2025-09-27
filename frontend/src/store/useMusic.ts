@@ -28,6 +28,7 @@ interface PlaylistInfo {
 
 interface MusicState {
   currentSong?: Song;
+  currentId?: string;
   selectedSong?: Song;
   playlists: PlaylistInfo[];
   currentPlaylist: Song[];
@@ -40,8 +41,8 @@ interface MusicState {
   toggleLike: (songId: string) => void;
   createPlaylist: (name: string, songs?: Song[]) => void;
   toggleSongPlay: (songId: string) => void;
-    loadPlaylist: (playlistId: string) => void;
-    removePlaylist: (playlistId: string) => void;
+  loadPlaylist: (playlistId: string) => void;
+  removePlaylist: (playlistId: string) => void;
 }
 
 // Constantes para playlists especiales
@@ -68,6 +69,7 @@ export const useMusicStore = create<MusicState>()(
         }
       ],
       currentPlaylist: [],
+      currentId: "",
       isPlaying: false,
         removePlaylist: (playlistId) =>
           set((state) => ({
@@ -110,13 +112,25 @@ export const useMusicStore = create<MusicState>()(
             isLiked: false
           }));
 
-          // Actualizar la playlist de sesión actual
-          const updatedPlaylists = state.playlists.map(playlist => 
-            playlist.id === CURRENT_SESSION_PLAYLIST_ID
-              ? { ...playlist, songs: [...playlist.songs, ...newSongs] }
-              : playlist
-          );
+          let updatedPlaylists
+          let selectedPlaylist = state.playlists.find(playlist => playlist.id === state.currentId)
 
+          if (selectedPlaylist) {
+            updatedPlaylists = state.playlists.map(playlist => 
+              playlist.id === state.currentId
+                ? { ...playlist, songs: [...playlist.songs, ...newSongs] }
+                : playlist
+            );
+          }
+          else {
+            updatedPlaylists = state.playlists.map(playlist => 
+              playlist.id === CURRENT_SESSION_PLAYLIST_ID
+                ? { ...playlist, songs: [...playlist.songs, ...newSongs] }
+                : playlist
+            );
+
+          }
+          console.log(state.currentPlaylist)
           // Si no hay playlist actual, usar la de sesión actual
           const updatedCurrentPlaylist = state.currentPlaylist.length === 0
             ? newSongs
@@ -272,14 +286,9 @@ export const useMusicStore = create<MusicState>()(
         set((state) => {
           const playlist = state.playlists.find(p => p.id === playlistId);
           if (!playlist) return state;
-
+          
           // Detener y liberar el sonido actual
-          const { currentSound, setCurrentSound } = useSoundStore.getState();
-          if (currentSound) {
-            currentSound.stop();
-            currentSound.unload();
-            setCurrentSound(null);
-          }
+
 
           // Preservar el estado de "me gusta" al cargar las canciones
           const songsWithLikeState = playlist.songs.map(song => {
@@ -298,8 +307,9 @@ export const useMusicStore = create<MusicState>()(
           return {
             currentPlaylist: songsWithLikeState,
             currentSong: firstSong,
+            currentId: playlistId,
             selectedSong: firstSong,
-            isPlaying: false // Asegura que no se reproduce automáticamente
+            // isPlaying: false // Asegura que no se reproduce automáticamente
           };
         })
     }),

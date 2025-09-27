@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, ListMusic, PlusCircle } from 'lucide-react';
+import { ChevronRight, ListMusic, PlusCircle, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMusicStore } from '@/store/useMusic';
 import { PlaylistItem } from './playlist-item';
@@ -133,11 +133,11 @@ export function Sidebar() {
                       onClick={() => handleSelectPlaylist(playlist.id)}
                     />
                     <button
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500/80 hover:bg-red-600 text-white rounded-full p-1 shadow-lg"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500/80 hover:bg-red-600 flex items-center  text-white rounded-full p-1 shadow-lg"
                       onClick={e => {e.stopPropagation(); handleDeletePlaylist(playlist.id);}}
                       title="Eliminar playlist"
                     >
-                      <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6m-6 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+                     <Trash2  className='w-4 h-4'/>
                     </button>
                   </div>
                 ))}

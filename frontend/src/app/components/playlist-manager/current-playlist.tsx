@@ -9,13 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 import { FAVORITES_PLAYLIST_ID } from '@/store/useMusic';
-import { MediaSession } from '@/hooks/useMediaSession';
-import { previus, next } from '@/lib/howler/hwoler';
-import { useEffect } from 'react';
+
 
 
 export function CurrentPlaylist() {
-  const { playlistId ,currentPlaylist,  selectedSong, toggleSongPlay, setSelectedSong, removeSongFromPlaylist, addSongsToPlaylist, toggleLike, playlists } = useMusicStore();
+  const { currentId ,currentPlaylist,  selectedSong, toggleSongPlay, setSelectedSong, removeSongFromPlaylist, addSongsToPlaylist, toggleLike, playlists } = useMusicStore();
   // Buscar el nombre de la playlist actual
 
 
@@ -32,7 +30,7 @@ export function CurrentPlaylist() {
       if (filePaths && Array.isArray(filePaths) && filePaths.length > 0) {
         const songMetadata = await window.electronAPI.processMetadata(filePaths);
         if (songMetadata && Array.isArray(songMetadata)) {
-          addSongsToPlaylist(songMetadata);
+          addSongsToPlaylist(songMetadata, currentId);
         }
       }
     } catch (error) {
@@ -48,7 +46,7 @@ export function CurrentPlaylist() {
       <div className="bg-gray-900/95 backdrop-blur-md border-t border-gray-800">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
-        {playlistId !== FAVORITES_PLAYLIST_ID &&
+        {currentId !== FAVORITES_PLAYLIST_ID &&
           <Button
             variant="default"
             size="sm"
@@ -73,7 +71,7 @@ export function CurrentPlaylist() {
       <div className="mx-auto p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-orange-400/80 text-sm font-medium">{currentPlaylistName}</h3> 
-        {playlistId !== FAVORITES_PLAYLIST_ID &&
+        {currentId !== FAVORITES_PLAYLIST_ID &&
           <Button
             variant="default"
             size="sm"
