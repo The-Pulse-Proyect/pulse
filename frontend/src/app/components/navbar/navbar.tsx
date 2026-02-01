@@ -59,6 +59,10 @@ export default function ElectronNavbar() {
     window.electronAPI.closeApp()
   }
 
+  const handleOpenConfigFolder = async () => {
+    window.electronAPI.openConfigFolder()
+  }
+
   const handleMenuAction = (action: string) => {
     console.log(`Acción del menú: ${action}`)
   }
@@ -83,7 +87,7 @@ export default function ElectronNavbar() {
             <FileText className="mr-2 h-4 w-4" />
             Nuevo archivo
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleMenuAction("configuracion")}>
+          <DropdownMenuItem onClick={handleOpenConfigFolder}>
             <Settings className="mr-2 h-4 w-4" />
             Configuración
           </DropdownMenuItem>
