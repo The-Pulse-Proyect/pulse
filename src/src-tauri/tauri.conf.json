@@ -1,0 +1,65 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Pulse Music",
+  "version": "0.0.1",
+  "identifier": "com.pulse.music",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../../dist"
+  },
+   "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Pulse Music",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 400,
+        "minHeight": 300,
+        "decorations": false,      
+        "transparent": true,
+        "center": true,
+        "visible": true,
+        "resizable": true,         
+        "fullscreen": false,
+        "shadow": false,
+        "skipTaskbar": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost;"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": false,
+    "resources": [],
+    "externalBin": [],
+    "copyright": "Copyright © 2026 The-Pulse-Proyect",
+    "category": "Music",
+    "shortDescription": "Pulse Music Player",
+    "longDescription": "Pulse es un reproductor de música moderno con modo mini ventana, visualizador de espectro en tiempo real y soporte para múltiples formatos de audio. Construido con Tauri para un rendimiento óptimo y bajo consumo de recursos.",
+    "windows": {
+      "nsis": {
+        "languages": [
+          "Spanish",
+          "English"
+        ],
+        "displayLanguageSelector": true
+      },
+      "wix": {
+        "language": "es-ES"
+      }
+    }
+  }
+}

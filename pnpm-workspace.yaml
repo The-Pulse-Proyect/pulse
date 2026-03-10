@@ -1,4 +1,4 @@
 onlyBuiltDependencies:
-  - electron
-  - electron-winstaller
+  - '@swc/core'
+  - '@tailwindcss/oxide'
   - esbuild

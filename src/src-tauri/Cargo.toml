@@ -1,0 +1,35 @@
+[package]
+name = "pulse-music-tauri"
+version = "0.0.1"
+description = "Pulse Music Player - Reproductor de música moderno construido con Tauri"
+authors = ["The-Pulse-Proyect"]
+edition = "2021"
+license = "ISC"
+repository = "https://github.com/The-Pulse-Proyect/pulse"
+homepage = "https://github.com/The-Pulse-Proyect/pulse"
+readme = "README.md"
+
+
+[build-dependencies]
+tauri-build = { version = "2.5.3", features = [] }
+
+
+[dependencies]
+tauri = { version = "2.9.5", features = [] }
+tauri-plugin-dialog = "2.0.0-beta"
+tauri-plugin-fs = "2.0.0-beta"
+tauri-plugin-shell = "2.0.0-beta"
+tauri-plugin-os = "2.0.0-beta"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+symphonia = { version = "0.5", features = ["all"] }
+base64 = "0.21"
+dirs = "5.0"
+once_cell = "1.19"
+id3 = "1.4"
+log = "0.4"
+env_logger = "0.11"
+
+[features]
+default = []

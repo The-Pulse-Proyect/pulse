@@ -1,14 +1,15 @@
 {
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "outDir": "./dist",
-    "sourceMap": true,
-    "skipLibCheck": true
-  },
-  "include": ["electron/**/*.ts"],
-  "exclude": ["node_modules"]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+    
+  }
+
 }
