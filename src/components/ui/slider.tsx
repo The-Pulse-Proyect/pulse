@@ -3,14 +3,19 @@ import * as SliderPrimitive from "@radix-ui/react-slider"
 
 import { cn } from "@/lib/utils"
 
+interface SliderProps extends React.ComponentProps<typeof SliderPrimitive.Root> {
+  bufferPercent?: number;
+}
+
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  bufferPercent = 0,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: SliderProps) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -29,7 +34,7 @@ function Slider({
       min={min}
       max={max}
       className={cn(
-        "relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
+        "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
         className
       )}
       {...props}
@@ -40,10 +45,16 @@ function Slider({
           "bg-gray-800/50 relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-1 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1 hover:bg-gray-700/50 transition-colors"
         )}
       >
+        {/* Buffered bar (rendered inside the track to match layout) */}
+        <div
+          aria-hidden
+          className="absolute left-0 top-0 bottom-0 rounded-full bg-gray-300/40 pointer-events-none"
+          style={{ width: `${Math.max(0, Math.min(100, bufferPercent))}%` }}
+        />
         <SliderPrimitive.Range
           data-slot="slider-range"
           className={cn(
-            "bg-orange-500/90 absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full shadow-orange-500/20 shadow-sm"
+            "bg-accent/90 absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full shadow-sm"
           )}
         />
       </SliderPrimitive.Track>
@@ -51,7 +62,7 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
-          className="border-orange-500 bg-orange-500 ring-orange-500/20 block size-3 shrink-0 rounded-full border-2 shadow transition-all hover:scale-125 hover:bg-orange-400 hover:border-orange-400 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+          className="border-accent bg-accent ring-accent block size-3 shrink-0 rounded-full border-2 shadow transition-all hover:scale-125 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
     </SliderPrimitive.Root>

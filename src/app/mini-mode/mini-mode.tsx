@@ -117,7 +117,7 @@ export default function MiniMusicPlayer() {
         {/* Album Art */}
         <div className="w-[100px] h-[100px] relative flex-shrink-0 rounded-xl overflow-hidden shadow-xl">
           <img 
-            src={currentSong?.cover_url || '/pulse.png'} 
+            src={currentSong?.coverUrl || '/pulse.png'} 
             alt="Album cover" 
             className="w-full h-full object-cover" 
           />
@@ -196,7 +196,7 @@ export default function MiniMusicPlayer() {
           <div className="mt-1">
             <ProgressBar
               currentTime={currentTime}
-              duration={currentSong?.duration_raw || 0}
+              duration={currentSong?.durationRaw || 0}
               onProgressChange={handleProgressChange}
             />
           </div>

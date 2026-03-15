@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { Song } from '@/types/song';
+import type { Song } from '@/types/tauri';
 import { PlayCircle } from 'lucide-react';
 
 interface PlaylistItemProps {
@@ -20,9 +20,9 @@ export function PlaylistItem({ name, songs, isActive, onClick }: PlaylistItemPro
         </div>
       );
     }
-    return song.cover_url ? (
+    return song.coverUrl ? (
       <img 
-        src={song.cover_url} 
+        src={song.coverUrl} 
         alt={`${song.title} cover`}
         className="w-full h-full object-cover"
       />

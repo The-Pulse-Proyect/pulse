@@ -25,9 +25,9 @@ function CurrentSongTitle() {
 
   return (
     <div className="flex items-center justify-center gap-3">
-      {currentSong.cover_url && (
+      {currentSong.coverUrl && (
         <img 
-          src={currentSong.cover_url} 
+          src={currentSong.coverUrl} 
           alt={currentSong.title} 
           className="w-6 h-6 rounded-sm object-cover"
         />

@@ -9,14 +9,16 @@ import { useSoundStore } from "@/store/useSound"
 interface VolumeControlProps {
   volume: number
   onVolumeChange: (volume: number) => void
+  isOpen?: boolean
+  onVisibleChange?: (visible: boolean) => void
 }
 
-export default function VolumeControl({ volume, onVolumeChange }: VolumeControlProps) {
+export default function VolumeControl({ volume, onVolumeChange, isOpen, onVisibleChange }: VolumeControlProps) {
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [sliderValue, setSliderValue] = useState(100)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { currentSound } = useSoundStore.getState()
+  const currentSound = useSoundStore(state => state.currentSound)
 
   useEffect(() => {
     if (!showVolumeSlider) return
@@ -24,12 +26,18 @@ export default function VolumeControl({ volume, onVolumeChange }: VolumeControlP
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setShowVolumeSlider(false)
+        onVisibleChange?.(false)
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [showVolumeSlider])
+
+  // Controlled visibility: update internal state when parent sends isOpen prop
+  useEffect(() => {
+    if (typeof isOpen === 'boolean') setShowVolumeSlider(isOpen)
+  }, [isOpen])
 
   useEffect(() => {
     setSliderValue(volume)
@@ -43,7 +51,12 @@ export default function VolumeControl({ volume, onVolumeChange }: VolumeControlP
 
   const handleVolumeChange = ([newVolume]: number[]) => {
     if (!currentSound) return
-    currentSound.volume(newVolume / 100)
+    try {
+      // HTMLMediaElement expects 0..1 value
+      (currentSound as HTMLMediaElement).volume = newVolume / 100
+    } catch (e) {
+      console.warn('Failed to set volume on currentSound', e)
+    }
     setSliderValue(newVolume)
     onVolumeChange(newVolume)
     if (newVolume > 0 && isMuted) setIsMuted(false)
@@ -54,7 +67,11 @@ export default function VolumeControl({ volume, onVolumeChange }: VolumeControlP
     const wasMuted = isMuted
     setIsMuted(!wasMuted)
     const restoredVolume = sliderValue > 0 ? sliderValue : 50
-    currentSound.volume(wasMuted ? restoredVolume / 100 : 0)
+    try {
+      (currentSound as HTMLMediaElement).volume = wasMuted ? restoredVolume / 100 : 0
+    } catch (e) {
+      console.warn('Failed to toggle mute on currentSound', e)
+    }
     if (wasMuted) setSliderValue(restoredVolume)
     else setSliderValue(0)
   }
@@ -69,7 +86,7 @@ export default function VolumeControl({ volume, onVolumeChange }: VolumeControlP
       >
         <div className="flex items-center gap-3">
           <button onClick={handleMuteToggle} className="text-gray-400 hover:text-white transition-colors duration-200">
-            <VolumeIcon className="h-4 w-4 flex-shrink-0" />
+            <VolumeIcon className="h-4 w-4 shrink-0" />
           </button>
           <div className="flex-1">
             <Slider
@@ -91,7 +108,11 @@ export default function VolumeControl({ volume, onVolumeChange }: VolumeControlP
         variant="ghost"
         size="icon"
         className="text-white hover:bg-white/10 relative transition duration-150 hover:scale-105"
-        onClick={() => setShowVolumeSlider(prev => !prev)}
+        onClick={() => {
+          const next = !showVolumeSlider
+          setShowVolumeSlider(next)
+          onVisibleChange?.(next)
+        }}
       >
         <VolumeIcon className="h-5 w-5" />
       </Button>

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 import { FAVORITES_PLAYLIST_ID } from '@/store/useMusic';
-import type { Song } from '@/types/song';
+import type { Song } from '@/types/tauri';
 
 export function CurrentPlaylist() {
   const { currentId, currentPlaylist, selectedSong, toggleSongPlay, setSelectedSong, removeSongFromPlaylist, addSongsToPlaylist, toggleLike, playlists } = useMusicStore();
@@ -89,9 +89,9 @@ export function CurrentPlaylist() {
             >
               {/* Cover/Placeholder */}
               <div className="flex-shrink-0 w-12 h-12 rounded-md overflow-hidden bg-gray-800">
-                {song.cover_url ? (
+                {song.coverUrl ? (
                   <img 
-                    src={song.cover_url} 
+                    src={song.coverUrl} 
                     alt={`${song.title} cover`} 
                     className="w-full h-full object-cover"
                   />
