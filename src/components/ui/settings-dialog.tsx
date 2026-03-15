@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useConfigStore } from '@/store/useConfig';
-import { Sun, Droplet, Speaker, Keyboard, Settings as Gear } from 'lucide-react';
+import { Droplet, Speaker, Keyboard, Settings as Gear } from 'lucide-react';
 import ErrorDialog from './error-dialog'
 
 type Props = {

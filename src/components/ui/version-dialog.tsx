@@ -5,7 +5,7 @@ type Props = {
   version?: string
 }
 
-const Logo = () => (
+/*const Logo = () => (
   <svg
     width="64"
     height="64"
@@ -22,7 +22,7 @@ const Logo = () => (
       fill="none"
     />
   </svg>
-);
+);*/
 
 
 
