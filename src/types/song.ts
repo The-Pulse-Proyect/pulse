@@ -4,9 +4,9 @@ export interface Song {
   artist: string;
   album: string;
   duration: string;      // Duración formateada (MM:SS)
-  duration_raw: number;   // Duración en segundos
-  cover_url?: string;
-  file_path: string;
+  durationRaw: number;   // Duración en segundos
+  coverUrl?: string;
+  filePath: string;
   isPlaying?: boolean;
   isLiked?: boolean;
 }

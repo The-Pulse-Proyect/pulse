@@ -1,9 +1,8 @@
 import { create } from 'zustand'
-import { Howl } from 'howler'
 
 interface SoundState {
-  currentSound: Howl | null;
-  setCurrentSound: (sound: Howl | null) => void;
+  currentSound: HTMLMediaElement | null;
+  setCurrentSound: (sound: Howl | HTMLMediaElement | null) => void;
   currentTime: number;
   setCurrentTime: (time: number) => void;
   isShuffled: boolean;
@@ -22,12 +21,12 @@ export const useSoundStore = create<SoundState>()((set, get) => ({
     const { currentSound, repeatMode } = get()
     const newRepeatMode = !repeatMode
     if (currentSound) {
-      currentSound.loop(newRepeatMode)
+      try { currentSound.loop = newRepeatMode; } catch (e) { /* ignore */ }
     }
     set({ repeatMode: newRepeatMode })
   },
   currentSound: null,
-  setCurrentSound: (sound) => set({ currentSound: sound }),
+  setCurrentSound: (sound) => set({ currentSound: sound as HTMLMediaElement | null }),
   currentTime: 0,
   setCurrentTime: (time: number) => set({ currentTime: time}),
   spectrumData: Array(30).fill(5),
