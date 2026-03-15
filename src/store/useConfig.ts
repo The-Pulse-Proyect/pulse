@@ -15,7 +15,7 @@ type _RendererConfigAPI = {
     onConfigUpdated?: (listener: (cfg: Partial<ConfigState['appConfig']>) => void) => void;
     setUserConfig?: (config: ConfigState['appConfig']) => Promise<Partial<ConfigState['appConfig']> | void>;
 };
-const getElApi = () => (window as unknown as { electronAPI?: _RendererConfigAPI }).electronAPI;
+const getElApi = () => (window as unknown as { tauriAPI?: _RendererConfigAPI }).tauriAPI;
 
 interface ConfigState {
     openVersionDialog: boolean;
