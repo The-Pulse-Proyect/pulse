@@ -9,7 +9,7 @@
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../../dist"
   },
-   "app": {
+  "app": {
     "windows": [
       {
         "label": "main",
@@ -18,18 +18,18 @@
         "height": 800,
         "minWidth": 400,
         "minHeight": 300,
-        "decorations": false,      
+        "decorations": false,
         "transparent": true,
         "center": true,
         "visible": true,
-        "resizable": true,         
+        "resizable": true,
         "fullscreen": false,
         "shadow": false,
         "skipTaskbar": false
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost;"
+      "csp": "default-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; media-src 'self' blob: data:; connect-src 'self' ipc: http://ipc.localhost; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
     }
   },
   "bundle": {
@@ -49,6 +49,21 @@
     "category": "Music",
     "shortDescription": "Pulse Music Player",
     "longDescription": "Pulse es un reproductor de música moderno con modo mini ventana, visualizador de espectro en tiempo real y soporte para múltiples formatos de audio. Construido con Tauri para un rendimiento óptimo y bajo consumo de recursos.",
+    "fileAssociations": [
+      {
+        "ext": [
+          "mp3",
+          "wav",
+          "ogg",
+          "flac",
+          "m4a",
+          "aac"
+        ],
+        "name": "Pulse Music",
+        "role": "Editor",
+        "description": "Pulse Music Audio File"
+      }
+    ],
     "windows": {
       "nsis": {
         "languages": [
