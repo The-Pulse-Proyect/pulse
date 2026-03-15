@@ -120,3 +120,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Accent utilities to use CSS variable based colors */
+@layer utilities {
+  .bg-accent { background-color: var(--color-accent) !important; }
+  .text-accent { color: var(--color-accent) !important; }
+  .border-accent { border-color: var(--color-accent) !important; }
+  .bg-accent-10 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
+  .bg-accent-20 { background-color: color-mix(in srgb, var(--color-accent) 20%, transparent) !important; }
+  .ring-accent { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 20%, transparent) !important; }
+}
