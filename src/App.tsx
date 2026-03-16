@@ -16,8 +16,55 @@ function App() {
       setMiniMode(!!e.detail);
     };
 
+    // Prevenir menú contextual en toda la app
+    const preventContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInput = target.tagName === 'INPUT' || 
+                      target.tagName === 'TEXTAREA' || 
+                      target.isContentEditable;
+      
+      // Permitir clic derecho SOLO en inputs y si se mantiene Shift (para debug)
+      if (!isInput && !e.shiftKey) {
+        e.preventDefault();
+      }
+    };
+
+    // Prevenir atajos del navegador
+    const preventBrowserShortcuts = (e: KeyboardEvent) => {
+      // Prevenir Ctrl+S, Ctrl+P, etc.
+      if (e.ctrlKey) {
+        switch(e.key.toLowerCase()) {
+          case 's': // Guardar
+          case 'p': // Imprimir
+          case 'u': // Ver código fuente
+          case 'f': // Buscar
+          case 'h': // Historial
+          case 'r': // Recargar
+            e.preventDefault();
+            break;
+        }
+      }
+      
+      // Prevenir F5
+      if (e.key === 'F5') {
+        e.preventDefault();
+      }
+      
+      // Prevenir Ctrl+Shift+I (DevTools) pero permitir F12
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('contextmenu', preventContextMenu);
+    window.addEventListener('keydown', preventBrowserShortcuts);
     window.addEventListener('mini-mode', handleMiniMode);
-    return () => window.removeEventListener('mini-mode', handleMiniMode);
+    
+    return () => {
+      window.removeEventListener('contextmenu', preventContextMenu);
+      window.removeEventListener('keydown', preventBrowserShortcuts);
+      window.removeEventListener('mini-mode', handleMiniMode);
+    };
   }, []);
 
   return (
