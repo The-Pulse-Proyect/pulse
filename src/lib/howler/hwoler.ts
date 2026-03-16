@@ -8,8 +8,10 @@ export async function playSound(filePath: string, songId?: string) {
   const { setOpenErrorDialog } = useConfigStore.getState();
   const { setCurrentSong, setIsPlaying } = useMusicStore.getState();
 
-  // Stop previous sound (works for both Howl and HTMLAudioElement)
-  stopCurrentSound();
+  // ✅ CAMBIO 1: Hacer await a stopCurrentSound y esperar un poco
+  await stopCurrentSound();
+  // Pequeña pausa para asegurar que la limpieza termine
+  await new Promise(resolve => setTimeout(resolve, 50));
 
   const streamUrl = await window.tauriAPI.getAudioStreamUrl(filePath);
   const data = streamUrl ?? await window.tauriAPI.getAudioData(filePath);
@@ -84,32 +86,63 @@ export async function playSound(filePath: string, songId?: string) {
   return audio;
 }
 
-function stopCurrentSound() {
+async function stopCurrentSound() {
   const { setCurrentSound, currentSound } = useSoundStore.getState();
-  if (!currentSound) return;
-  // Detect Howl-like (has stop/unload functions)
-  const maybeHowl = currentSound as unknown as { stop?: unknown; unload?: unknown };
-  const maybeAudio = currentSound as unknown as HTMLMediaElement;
-  if (typeof maybeHowl.stop === 'function') {
-    try {
-      (maybeHowl.stop as () => void)();
-      if (typeof maybeHowl.unload === 'function') (maybeHowl.unload as () => void)();
-    } catch (e) {
-      console.warn('Error stopping Howl', e);
+  if (!currentSound) return Promise.resolve();
+
+  return new Promise<void>((resolve) => {
+    // Detect Howl-like (has stop/unload functions)
+    const maybeHowl = currentSound as unknown as { stop?: unknown; unload?: unknown };
+    const maybeAudio = currentSound as unknown as HTMLMediaElement;
+
+    if (typeof maybeHowl.stop === 'function') {
+      try {
+        (maybeHowl.stop as () => void)();
+        if (typeof maybeHowl.unload === 'function') (maybeHowl.unload as () => void)();
+      } catch (e) {
+        console.warn('Error stopping Howl', e);
+      }
+      setCurrentSound(null);
+      resolve();
+    } else if (maybeAudio instanceof HTMLMediaElement) {
+      try {
+        // Remove handlers
+        try { (maybeAudio as HTMLMediaElement).onerror = null; } catch (e) { }
+        try { (maybeAudio as HTMLMediaElement).onended = null; } catch (e) { }
+
+        // Pausar y limpiar
+        (maybeAudio as HTMLMediaElement).pause();
+
+        // ✅ Usar 'canplaythrough' o un timeout para saber cuándo está lista
+        const checkInterval = setInterval(() => {
+          if (maybeAudio.paused) {
+            clearInterval(checkInterval);
+            try {
+              (maybeAudio as HTMLMediaElement).src = '';
+              (maybeAudio as HTMLMediaElement).load();
+            } catch (e) { }
+            setCurrentSound(null);
+            resolve();
+          }
+        }, 10);
+
+        // Timeout de seguridad
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          setCurrentSound(null);
+          resolve();
+        }, 200);
+
+      } catch (e) {
+        console.warn('Error stopping audio element', e);
+        setCurrentSound(null);
+        resolve();
+      }
+    } else {
+      setCurrentSound(null);
+      resolve();
     }
-  } else if (maybeAudio instanceof HTMLMediaElement) {
-    try {
-      // Remove handlers to avoid spurious errors
-      try { (maybeAudio as HTMLMediaElement).onerror = null; } catch (e) { console.warn('Failed to clear audio onerror handler', e); }
-      try { (maybeAudio as HTMLMediaElement).onended = null; } catch (e) { console.warn('Failed to clear audio onended handler', e); }
-      (maybeAudio as HTMLMediaElement).pause();
-      // Reset source and call load to clear buffer
-      try { (maybeAudio as HTMLMediaElement).src = ''; (maybeAudio as HTMLMediaElement).load(); } catch (e) { console.warn('Failed to clear audio src/load', e); }
-    } catch (e) {
-      console.warn('Error stopping audio element', e);
-    }
-  }
-  setCurrentSound(null);
+  });
 }
 
 /**
@@ -118,7 +151,7 @@ function stopCurrentSound() {
 function skipToNextSong() {
   const { currentPlaylist, currentSong, setCurrentSong, setIsPlaying } = useMusicStore.getState();
   const { isShuffled } = useSoundStore.getState();
-  
+
   if (!currentSong || !currentPlaylist.length) {
     setIsPlaying(false);
     return;
@@ -137,9 +170,9 @@ function skipToNextSong() {
   }
 }
 
-export function previus() {
+export async function previus() {
   const { currentPlaylist, currentSong, setCurrentSong, setIsPlaying } = useMusicStore.getState();
-  stopCurrentSound();
+  await stopCurrentSound();
   if (!currentSong) return;
 
   const songIndex = currentPlaylist.findIndex(song => song.id === currentSong.id);
@@ -148,9 +181,9 @@ export function previus() {
   setIsPlaying(true);
 }
 
-export function next() {
+export async function next() {
   const { currentPlaylist, currentSong, setCurrentSong, setIsPlaying } = useMusicStore.getState();
-  stopCurrentSound();
+  await stopCurrentSound();
   if (!currentSong) return;
 
   const songIndex = currentPlaylist.findIndex(song => song.id === currentSong.id);
