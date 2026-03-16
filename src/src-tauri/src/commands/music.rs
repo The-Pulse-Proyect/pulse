@@ -302,7 +302,7 @@ fn run_server(state_arc: SharedServerState) {
                     Ok(Some(req)) => Some(req),
                     Ok(None) => continue,
                     Err(e) => {
-                        error!("❌ Error recibiendo petición: {}", e);
+                        error!(" Error recibiendo petición: {}", e);
                         continue;
                     }
                 }
@@ -355,7 +355,7 @@ fn serve_audio_file(request: tiny_http::Request, file_path: &str) {
     let decoded_path = match urlencoding::decode(file_path) {
         Ok(path) => path.into_owned(),
         Err(e) => {
-            error!("❌ Error decodificando path: {}", e);
+            error!(" Error decodificando path: {}", e);
             let response = Response::from_string("Invalid file path encoding")
                 .with_status_code(400)
                 .with_header(Header::from_bytes("Access-Control-Allow-Origin", "*").unwrap());
@@ -367,7 +367,7 @@ fn serve_audio_file(request: tiny_http::Request, file_path: &str) {
     let path = Path::new(&decoded_path);
     
     if !path.exists() {
-        error!("❌ Archivo no encontrado: {}", decoded_path);
+        error!(" Archivo no encontrado: {}", decoded_path);
         let response = Response::from_string("File not found")
             .with_status_code(404)
             .with_header(Header::from_bytes("Access-Control-Allow-Origin", "*").unwrap());
@@ -378,7 +378,7 @@ fn serve_audio_file(request: tiny_http::Request, file_path: &str) {
     let file_size = match std::fs::metadata(path) {
         Ok(metadata) => metadata.len(),
         Err(e) => {
-            error!("❌ Error obteniendo metadata: {}", e);
+            error!(" Error obteniendo metadata: {}", e);
             let response = Response::from_string("Error getting file metadata")
                 .with_status_code(500)
                 .with_header(Header::from_bytes("Access-Control-Allow-Origin", "*").unwrap());
@@ -425,7 +425,7 @@ fn serve_audio_file(request: tiny_http::Request, file_path: &str) {
                     let _ = request.respond(response);
                 }
                 Err(e) => {
-                    error!("❌ Error abriendo archivo: {}", e);
+                    error!(" Error abriendo archivo: {}", e);
                     let response = Response::from_string("Error opening file")
                         .with_status_code(500)
                         .with_header(Header::from_bytes("Access-Control-Allow-Origin", "*").unwrap());
@@ -455,7 +455,7 @@ fn serve_audio_file(request: tiny_http::Request, file_path: &str) {
             let _ = request.respond(response);
         }
         Err(e) => {
-            error!("❌ Error leyendo archivo completo: {}", e);
+            error!(" Error leyendo archivo completo: {}", e);
             let response = Response::from_string("Error reading file")
                 .with_status_code(500)
                 .with_header(Header::from_bytes("Access-Control-Allow-Origin", "*").unwrap());
