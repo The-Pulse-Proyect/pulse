@@ -128,14 +128,11 @@ export default function MiniMusicPlayer() {
         <div className="flex-1 flex flex-col overflow-hidden min-w-0">
           {/* Título y Artista con animación infinita en una sola dirección */}
           <div className="mb-1">
-            {/* Contenedor del título con efecto de desvanecimiento en los bordes */}
             <div 
               ref={containerRef}
               className="w-full overflow-hidden whitespace-nowrap relative"
-              style={{
-                maskImage: 'linear-gradient(90deg, transparent 0%, black 15%, black 85%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 15%, black 85%, transparent 100%)'
-              }}
+              
+              
             >
               {shouldAnimate ? (
                 // Versión con animación: duplicamos el título para efecto continuo
