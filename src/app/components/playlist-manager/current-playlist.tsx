@@ -10,6 +10,13 @@ import { Button } from '@/components/ui/button';
 import { FAVORITES_PLAYLIST_ID } from '@/store/useMusic';
 import type { Song } from '@/types/tauri';
 
+// Función para truncar texto
+const truncateText = (text: string, maxLength: number = 40) => {
+  if (!text) return '';
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + '...';
+}
+
 export function CurrentPlaylist() {
   const { currentId, currentPlaylist, selectedSong, toggleSongPlay, setSelectedSong, removeSongFromPlaylist, addSongsToPlaylist, toggleLike, playlists } = useMusicStore();
 
@@ -102,18 +109,18 @@ export function CurrentPlaylist() {
                 )}
               </div>
 
-              {/* Song Info */}
+              {/* Song Info - CON TRUNCAMIENTO */}
               <div className="flex-1 min-w-0">
-                <div className={`text-sm font-medium truncate ${song.isPlaying ? 'text-orange-400' : 'text-gray-300'}`}>
-                  {song.title}
+                <div className={`text-sm font-medium ${song.isPlaying ? 'text-orange-400' : 'text-gray-300'}`}>
+                  {truncateText(song.title, 200)}
                 </div>
-                <div className="text-sm text-gray-500 truncate">
-                  {song.artist}
+                <div className="text-sm text-gray-500">
+                  {truncateText(song.artist, 100)}
                 </div>
               </div>
 
               {/* Duration and Actions */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <Button
                   variant="ghost"
                   size="sm"
